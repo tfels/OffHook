@@ -7,7 +7,7 @@
 #include "MainDialog.h"
 #include "SettingsDialog.h"
 #include "Jabra.h"
-#include "OffHookSettings.h"
+#include "ProcessWatcher.h"
 
 MainDialog* Singleton<MainDialog>::g_instance = nullptr;
 
@@ -39,6 +39,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 
 	case WM_CLOSE:
 		removeTrayIcon();
+		ProcessWatcher::instance()->Exit();
 		Jabra::instance()->Exit(m_settings.OnHookOnExit);
 		DestroyWindow(hDlg);
 		return (INT_PTR)TRUE;
@@ -85,6 +86,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		{
 		case IDC_INIT:
 			Jabra::instance()->InitSdk();
+			ProcessWatcher::instance()->Init();
 			break;
 		case IDC_BUSYLIGHT:
 			Jabra::instance()->Busy();
