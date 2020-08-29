@@ -87,6 +87,9 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		case IDC_INIT:
 			Jabra::instance()->InitSdk();
 			ProcessWatcher::instance()->Init();
+			ProcessWatcher::instance()->NotifyStartOfProcess(nullptr);
+			//ProcessWatcher::instance()->NotifyStartOfProcess("notepad.exe");
+			//ProcessWatcher::instance()->NotifyStartOfProcess("g2mvideoconference.exe");
 			break;
 		case IDC_BUSYLIGHT:
 			Jabra::instance()->Busy();

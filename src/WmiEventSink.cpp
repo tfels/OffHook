@@ -38,59 +38,40 @@ HRESULT WmiEventSink::Indicate(long lObjectCount, IWbemClassObject** apObjArray)
 	{
 		Log("Event occurred\r\n");
 
-		// get class name
-		{
-			VARIANT v;
-			BSTR strClassProp = SysAllocString(L"__CLASS");
-			HRESULT hr;
-			hr = apObjArray[i]->Get(strClassProp, 0, &v, 0, 0);
-			SysFreeString(strClassProp);
-			if(SUCCEEDED(hr) && (V_VT(&v) == VT_BSTR))
-				Log("The class name is %ls\r\n", V_BSTR(&v));
-			else
-				Log("Error in getting specified object\r\n");
-			VariantClear(&v);
-		}
+		//logClassName(apObjArray[i]);
+
 		// get Win32_Process object
 		VARIANT proc;
-		{
-			HRESULT hres = apObjArray[i]->Get(_bstr_t(L"TargetInstance"), 0, &proc, 0, 0);
-
-			if(FAILED(hres))
-			{
-				Log("Failed to get the data from the query. Error code = 0x%x\r\n", hres);
-				return WBEM_E_FAILED;       // Program has failed.
-			}
+		hres = apObjArray[i]->Get(_bstr_t(L"TargetInstance"), 0, &proc, 0, 0);
+		if(FAILED(hres)){
+			Log("Failed to get the TargetInstance (Win32_Process object) from the query. Error code = 0x%x\r\n", hres);
+			return WBEM_E_FAILED;
 		}
 		IUnknown* unkown = V_UNKNOWN(&proc);
 		IWbemClassObject* processObject;
-		HRESULT hr = unkown->QueryInterface(IID_IWbemClassObject, (void**)&processObject);
+		hres = unkown->QueryInterface(IID_IWbemClassObject, (void**)&processObject);
+		if(FAILED(hres)) {
+			Log("Failed to get the Win32_Process interface. Error code = 0x%x\r\n", hres);
+			return WBEM_E_FAILED;
+		}
 
 		// get name
-		{
-			VARIANT varName;
-			HRESULT hres = processObject->Get(_bstr_t(L"Name"), 0, &varName, 0, 0);
-
-			if(FAILED(hres))
-			{
-				Log("Failed to get the data from the query. Error code = 0x%x\r\n", hres);
-				return WBEM_E_FAILED;       // Program has failed.
-			}
-
-			Log("Name: %ls\r\n", V_BSTR(&varName));
+		VARIANT varName;
+		hres = processObject->Get(_bstr_t(L"Name"), 0, &varName, 0, 0);
+		if(FAILED(hres)){
+			Log("Failed to get the process name from the Win32_Process object. Error code = 0x%x\r\n", hres);
+			return WBEM_E_FAILED;
 		}
-		{
-			VARIANT varName;
-			HRESULT hres = processObject->Get(_bstr_t(L"ExecutablePath"), 0, &varName, 0, 0);
+		Log("Name: %ls\r\n", V_BSTR(&varName));
+		VariantClear(&varName);
 
-			if(FAILED(hres))
-			{
-				Log("Failed to get the data from the query. Error code = 0x%x\r\n", hres);
-				return WBEM_E_FAILED;       // Program has failed.
-			}
-
-			Log("ExecutablePath: %ls\r\n", V_BSTR(&varName));
+		hres = processObject->Get(_bstr_t(L"ExecutablePath"), 0, &varName, 0, 0);
+		if(FAILED(hres)) {
+			Log("Failed to get the executable path from the Win32_Process object. Error code = 0x%x\r\n", hres);
+			return WBEM_E_FAILED;
 		}
+		Log("ExecutablePath: %ls\r\n", V_BSTR(&varName));
+		VariantClear(&varName);
 	}
 
 	return WBEM_S_NO_ERROR;
@@ -119,4 +100,18 @@ HRESULT WmiEventSink::SetStatus(
 		OutputDebugString("WmiEventSink::SetStatus: Call in progess.\n");
 	}
 	return WBEM_S_NO_ERROR;
+}
+
+
+void WmiEventSink::logClassName(IWbemClassObject* wmiObject)
+{
+	// get class name
+	VARIANT v;
+	HRESULT hr;
+	hr = wmiObject->Get(L"__CLASS", 0, &v, 0, 0);
+	if(SUCCEEDED(hr) && (V_VT(&v) == VT_BSTR))
+		Log("The class name is %ls\r\n", V_BSTR(&v));
+	else
+		Log("Error in getting specified object\r\n");
+	VariantClear(&v);
 }

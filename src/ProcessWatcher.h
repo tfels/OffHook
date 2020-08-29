@@ -9,6 +9,8 @@ class ProcessWatcher :public Singleton<ProcessWatcher>
 
 public:
 	bool Init();
+	bool NotifyStartOfProcess(const char* processName);
+	void StopNotify();
 	void Exit();
 
 private: // constructors

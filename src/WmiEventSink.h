@@ -29,4 +29,7 @@ public:
 		/* [in] */ BSTR strParam,
 		/* [in] */ IWbemClassObject __RPC_FAR* pObjParam
 	);
+
+private:
+	void logClassName(IWbemClassObject* wmiObject);
 };

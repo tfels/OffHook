@@ -3,6 +3,7 @@
 #include <objbase.h>
 #include <wbemidl.h>
 #include <comdef.h>
+#include <sstream>
 #include "ProcessWatcher.h"
 #include "MainDialog.h"
 
@@ -100,6 +101,14 @@ bool ProcessWatcher::Init()
 		Exit();
 		return false;
 	}
+	return true;
+}
+
+bool ProcessWatcher::NotifyStartOfProcess(const char *processName)
+{
+	HRESULT hres;
+	StopNotify();
+	Log("Registering notifier for start of process '%s'\r\n", processName);
 
 	// Receive event notifications -----------------------------
 
@@ -112,19 +121,20 @@ bool ProcessWatcher::Init()
 	pSink->AddRef();
 
 	pUnsecApp->CreateObjectStub(pSink, &pStubUnk);
-
 	pStubUnk->QueryInterface(IID_IWbemObjectSink, (void**)&pStubSink);
+
+	std::ostringstream query("SELECT * "
+		"FROM __InstanceCreationEvent WITHIN 1 "
+		"WHERE TargetInstance ISA 'Win32_Process'",
+		std::ostringstream::ate);
+	if(processName)
+		query << " AND TargetInstance.Name = '" << processName << "'";
 
 	// The ExecNotificationQueryAsync method will call
 	// the WmiEventQuery::Indicate method when an event occurs
 	hres = pSvc->ExecNotificationQueryAsync(
 		_bstr_t("WQL"),
-		_bstr_t("SELECT * "
-			"FROM __InstanceCreationEvent WITHIN 1 "
-			"WHERE TargetInstance ISA 'Win32_Process'"
-			//" AND TargetInstance.Name = 'notepad.exe'"
-		),
-		//_bstr_t("SELECT * FROM Win32_ProcessTrace WITHIN 1 "),
+		_bstr_t(query.str().c_str()),
 		WBEM_FLAG_SEND_STATUS,
 		NULL,
 		pStubSink);
@@ -141,12 +151,39 @@ bool ProcessWatcher::Init()
 	return true;
 }
 
+
+void ProcessWatcher::StopNotify()
+{
+	ULONG refCnt;
+
+	if(m_running) {
+		HRESULT hres = pSvc->CancelAsyncCall(pStubSink);
+		m_running = false;
+	}
+
+	if(pUnsecApp) {
+		refCnt = pUnsecApp->Release();
+		pUnsecApp = nullptr;
+	}
+
+	if(pStubUnk) {
+		refCnt = pStubUnk->Release();
+		pStubUnk = nullptr;
+	}
+
+	if(pStubSink) {
+		refCnt = pStubSink->Release();
+		pStubSink = nullptr;
+	}
+	if(pSink) {
+		refCnt = pSink->Release();
+		pSink = nullptr;
+	}
+}
+
 void ProcessWatcher::Exit()
 {
-
-	if(m_running)
-		HRESULT hres = pSvc->CancelAsyncCall(pStubSink);
-	m_running = false;
+	StopNotify();
 
 	if(pSvc) {
 		pSvc->Release();
@@ -156,23 +193,6 @@ void ProcessWatcher::Exit()
 		pLoc->Release();
 		pLoc = nullptr;
 	}
-	if(pUnsecApp) {
-		pUnsecApp->Release();
-		pUnsecApp = nullptr;
-	}
-	if(pStubUnk) {
-		pStubUnk->Release();
-		pStubUnk = nullptr;
-	}
-	if(pSink) {
-		pSink->Release();
-		pSink = nullptr;
-	}
-	if(pStubSink) {
-		pStubSink->Release();
-		pStubSink = nullptr;
-	}
 
 	CoUninitialize();
 }
-
