@@ -54,5 +54,11 @@
     <Image Include="images\OnHook.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
+    <Image Include="images\mic_off.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="images\mic_on.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
   </ItemGroup>
 </Project>

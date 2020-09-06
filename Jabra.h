@@ -16,8 +16,9 @@ public:
 	bool InitSdk();
 	bool InitDevice();
 	void Exit();
-	bool Busy();
 	bool OffHook();
+	bool Busy();
+	bool Mute();
 
 public: // internal callbacks
 	void cbDeviceAttached(Jabra_DeviceInfo deviceInfo);
@@ -36,6 +37,7 @@ private:
 	Jabra_DeviceInfo m_deviceInfo;
 	bool m_OffHookState = false;
 	bool m_BusyLightState = false;
+	bool m_MuteState = false;
 
 private:
 	class CGuard

@@ -86,6 +86,9 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDC_OFFHOOK:
 			Jabra::instance()->OffHook();
 			break;
+		case IDC_MUTE:
+			Jabra::instance()->Mute();
+			break;
 
 		case IDCLOSE:
 		case IDCANCEL:
@@ -98,42 +101,33 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-void SetOffHookIcon(bool state)
+void _setButtonImage(int controlId, int imageId)
 {
-	int imageId;
-	if(state)
-		imageId = IDB_OFFHOOK;
-	else
-		imageId = IDB_ONHOOK;
-
 	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT);
-	HANDLE hOld = (HANDLE)SendDlgItemMessage(g_hMainDlg, IDC_OFFHOOK, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)handle);
+	HANDLE hOld = (HANDLE)SendDlgItemMessage(g_hMainDlg, controlId, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)handle);
 	if(hOld && hOld != handle)
 		DeleteObject(hOld);
 
 	BITMAP bitmapInfo;
 	GetObject(handle, sizeof(BITMAP), &bitmapInfo);
-	SetWindowPos(GetDlgItem(g_hMainDlg, IDC_OFFHOOK), 0, 0, 0, bitmapInfo.bmWidth, bitmapInfo.bmHeight, SWP_NOMOVE | SWP_NOZORDER);
+	SetWindowPos(GetDlgItem(g_hMainDlg, controlId), 0, 0, 0, bitmapInfo.bmWidth, bitmapInfo.bmHeight, SWP_NOMOVE | SWP_NOZORDER);
 }
 
+void SetOffHookIcon(bool state)
+{
+	_setButtonImage(IDC_OFFHOOK, state ? IDB_OFFHOOK : IDB_ONHOOK);
+}
 
 void SetBusyLightIcon(bool state)
 {
-	int imageId;
-	if(state)
-		imageId = IDB_ON;
-	else
-		imageId = IDB_OFF;
-
-	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT);
-	HANDLE hOld = (HANDLE)SendDlgItemMessage(g_hMainDlg, IDC_BUSYLIGHT, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)handle);
-	if(hOld && hOld != handle)
-		DeleteObject(hOld);
-
-	BITMAP bitmapInfo;
-	GetObject(handle, sizeof(BITMAP), &bitmapInfo);
-	SetWindowPos(GetDlgItem(g_hMainDlg, IDC_BUSYLIGHT), 0, 0, 0, bitmapInfo.bmWidth, bitmapInfo.bmHeight, SWP_NOMOVE | SWP_NOZORDER);
+	_setButtonImage(IDC_BUSYLIGHT, state ? IDB_ON : IDB_OFF);
 }
+
+void SetMuteIcon(bool state)
+{
+	_setButtonImage(IDC_MUTE, state ? IDB_MIC_OFF : IDB_MIC_ON);
+}
+
 
 void Log(const TCHAR* aFormat, ...)
 {
@@ -144,10 +138,10 @@ void Log(const TCHAR* aFormat, ...)
 	vsnprintf(buf, sizeof(buf), aFormat, stArg);
 	//StringCchVPrintf(buf, sizeof(buf), aFormat, stArg);
 
-
 	va_end(stArg);
 	buf[sizeof(buf) - 1] = '\0';
 	
 	SendDlgItemMessage(g_hMainDlg, IDC_LOG, EM_SETSEL, -1, -1);
-	SendDlgItemMessage(g_hMainDlg, IDC_LOG, EM_REPLACESEL, TRUE, (LPARAM)buf);
+	SendDlgItemMessage(g_hMainDlg, IDC_LOG, EM_REPLACESEL, FALSE, (LPARAM)buf);
+	SendDlgItemMessage(g_hMainDlg, IDC_LOG, WM_VSCROLL, SB_BOTTOM, (LPARAM)NULL);
 }

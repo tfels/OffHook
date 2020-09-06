@@ -159,6 +159,8 @@
     <ResourceCompile Include="OffHook.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="images\mic_off.bmp" />
+    <Image Include="images\mic_on.bmp" />
     <Image Include="images\off.bmp" />
     <Image Include="images\OffHook.bmp" />
     <Image Include="images\on.bmp" />

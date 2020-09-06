@@ -58,9 +58,10 @@ BEGIN
     DEFPUSHBUTTON   "Exit",IDCLOSE,252,155,50,14
     PUSHBUTTON      "Init",IDC_INIT,252,7,50,14
     PUSHBUTTON      "OffHook",IDC_OFFHOOK,7,7,87,73,BS_BITMAP
-    PUSHBUTTON      "Toggle",IDC_BUSYLIGHT,99,20,102,31,BS_BITMAP
+    PUSHBUTTON      "BusyLight",IDC_BUSYLIGHT,200,35,102,31,BS_BITMAP
+    PUSHBUTTON      "Mute",IDC_MUTE,100,7,64,72,BS_BITMAP
     EDITTEXT        IDC_LOG,7,86,295,60,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
-    LTEXT           "Busy Light",IDC_STATIC,98,7,34,8
+    LTEXT           "Busy Light",IDC_STATIC,201,26,34,8
 END
 
 
@@ -99,13 +100,17 @@ END
 // Bitmap
 //
 
-IDB_OFF                 BITMAP                  "images\off.bmp"
+IDB_OFF                 BITMAP                  "images\\off.bmp"
 
-IDB_ON                  BITMAP                  "images\on.bmp"
+IDB_ON                  BITMAP                  "images\\on.bmp"
 
-IDB_OFFHOOK             BITMAP                  "images\OffHook.bmp"
+IDB_OFFHOOK             BITMAP                  "images\\OffHook.bmp"
 
-IDB_ONHOOK              BITMAP                  "images\OnHook.bmp"
+IDB_ONHOOK              BITMAP                  "images\\OnHook.bmp"
+
+IDB_MIC_ON              BITMAP                  "images\\mic_on.bmp"
+
+IDB_MIC_OFF             BITMAP                  "images\\mic_off.bmp"
 
 #endif    // German (Germany) resources
 /////////////////////////////////////////////////////////////////////////////

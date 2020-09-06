@@ -111,10 +111,12 @@ bool Jabra::InitDevice()
 {
 	bool ok;
 	
+	// OffHook
 	ok = Jabra_IsOffHookSupported(deviceId());
 	Log("OffHook Supported=%d\n", ok);
 	SetOffHookIcon(m_OffHookState);
 
+	// Busylight
 	ok = Jabra_IsBusylightSupported(deviceId());
 	Log("Busylight Supported=%d\n", ok);
 
@@ -124,6 +126,11 @@ bool Jabra::InitDevice()
 	SetBusyLightIcon(m_BusyLightState);
 
 	Jabra_RegisterBusylightEvent(gBusylightFunc);
+
+	// Mute
+	ok = Jabra_IsMuteSupported(deviceId());
+	Log("Mute Supported=%d\n", ok);
+	SetMuteIcon(m_MuteState);
 
 	return true;
 }
@@ -157,4 +164,14 @@ bool Jabra::Busy()
 
 	SetBusyLightIcon(m_BusyLightState);
 	return m_BusyLightState;
+}
+
+bool Jabra::Mute()
+{
+	Jabra_ReturnCode ret = Jabra_SetMute(deviceId(), !m_MuteState);
+	if(ret == Return_Ok)
+		m_MuteState = !m_MuteState;
+
+	SetMuteIcon(m_MuteState);
+	return m_MuteState;
 }
