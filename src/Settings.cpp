@@ -43,7 +43,7 @@ void Settings::Exit()
 }
 
 
-bool Settings::SaveInt(const char* valueName, DWORD value)
+bool Settings::SaveInt(const char* valueName, DWORD value) const
 {
 	if(m_hKey == nullptr)
 		return false;
@@ -51,7 +51,7 @@ bool Settings::SaveInt(const char* valueName, DWORD value)
 	return (err == ERROR_SUCCESS);
 }
 
-bool Settings::SaveString(const char* valueName, const char* value)
+bool Settings::SaveString(const char* valueName, const char* value) const
 {
 	if(m_hKey == nullptr)
 		return false;
@@ -60,10 +60,10 @@ bool Settings::SaveString(const char* valueName, const char* value)
 }
 
 
-DWORD Settings::ReadInt(const char* valueName)
+DWORD Settings::ReadInt(const char* valueName, DWORD defaultValue) const
 {
 	if(m_hKey == nullptr)
-		return -1;
+		return defaultValue;
 
 	DWORD ret = 0;
 	DWORD retSize = sizeof(ret);
@@ -71,13 +71,24 @@ DWORD Settings::ReadInt(const char* valueName)
 		RRF_RT_REG_DWORD, NULL,
 		&ret, &retSize);
 
-	return (err == ERROR_SUCCESS) ? ret : 0;
+	return (err == ERROR_SUCCESS) ? ret : defaultValue;
 }
 
-std::string Settings::ReadString(const char* valueName)
+bool Settings::ReadBool(const char* valueName, bool defaultValue) const
+{
+	DWORD ret = ReadInt(valueName, 42);
+	if(ret == 1)
+		return true;
+	else if(ret == 0)
+		return false;
+	else
+		return defaultValue;
+};
+
+std::string Settings::ReadString(const char* valueName, const char *defaultValue) const
 {
 	if(m_hKey == nullptr)
-		return "";
+		return defaultValue;
 
 	// determine size
 	DWORD valueSize = 0;
@@ -85,7 +96,7 @@ std::string Settings::ReadString(const char* valueName)
 		RRF_RT_REG_SZ, NULL,
 		nullptr, &valueSize);
 	if(err != ERROR_SUCCESS)
-		return "";
+		return defaultValue;
 
 	auto buf = std::make_unique<char[]>(valueSize);
 
@@ -93,5 +104,5 @@ std::string Settings::ReadString(const char* valueName)
 		RRF_RT_REG_SZ, NULL,
 		buf.get(), &valueSize);
 
-	return (err == ERROR_SUCCESS) ? std::string(buf.get()) : "";
+	return (err == ERROR_SUCCESS) ? std::string(buf.get()) : defaultValue;
 }
