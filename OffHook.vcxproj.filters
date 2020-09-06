@@ -18,12 +18,18 @@
     <ClCompile Include="OffHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Jabra.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OffHook.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="Jabra.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OffHook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

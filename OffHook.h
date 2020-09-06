@@ -1,3 +1,4 @@
 #pragma once
 
-//#include "resource.h"
+void Log(const char* aFormat, ...);
+
