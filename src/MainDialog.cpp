@@ -30,12 +30,15 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		SendMessageW(hDlg, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 		DestroyIcon(hIcon);
 		}
+		m_config.Init("Tim Felser", "OffHook");
+
 		ret = SetTimer(hDlg, IDC_INIT, 100, nullptr);
 		return (INT_PTR)TRUE;
 
 	case WM_CLOSE:
 		removeTrayIcon();
 		Jabra::instance()->Exit();
+		m_config.Exit();
 		DestroyWindow(hDlg);
 		return (INT_PTR)TRUE;
 

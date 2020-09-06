@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Singleton.h"
+#include "Settings.h"
 
 class MainDialog :public Singleton<MainDialog>
 {
@@ -16,13 +17,16 @@ public:
 
 	void Log(const char* aFormat, ...);
 
+private: // constructors
+	MainDialog() {};
+	~MainDialog() {};
+
 private:
 	void _setButtonImage(int controlId, int imageId);
 	void addTrayIcon(HWND hWnd);
 	void removeTrayIcon();
 
-private: // constructors
-	MainDialog() {};
-	~MainDialog() {};
+private:
+	Settings m_config;
 };
 
