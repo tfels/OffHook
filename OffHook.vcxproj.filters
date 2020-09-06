@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\images">
       <UniqueIdentifier>{8208669c-efae-4e5e-b65a-462150fee8c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="json-parser">
+      <UniqueIdentifier>{778c34c8-c2bc-4261-84eb-1c7fa46e4ddd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OffHook.cpp">
@@ -23,6 +26,9 @@
     </ClCompile>
     <ClCompile Include="Jabra.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="json-parser\json.c">
+      <Filter>json-parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="OffHook.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json-parser\json.h">
+      <Filter>json-parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

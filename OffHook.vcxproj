@@ -148,10 +148,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Jabra.cpp" />
+    <ClCompile Include="json-parser\json.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="OffHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Jabra.h" />
+    <ClInclude Include="json-parser\json.h" />
     <ClInclude Include="OffHook.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
