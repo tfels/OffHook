@@ -9,7 +9,7 @@ class Jabra :public Singleton<Jabra>
 public:
 	bool InitSdk();
 	bool InitDevice();
-	void Exit();
+	void Exit(bool onHookOnExit = true);
 	bool OffHook();
 	bool Busy();
 	bool Mute();

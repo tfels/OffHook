@@ -107,7 +107,7 @@ void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
 // ----------------------------------------
 bool Jabra::InitSdk()
 {
-	Exit();
+	Exit(true);
 
 	char ver[256];
 	Jabra_ReturnCode ret = Jabra_GetVersion(ver, sizeof(ver));
@@ -178,9 +178,9 @@ bool Jabra::InitDevice()
 	return true;
 }
 
-void Jabra::Exit()
+void Jabra::Exit(bool onHookOnExit)
 {
-	if(m_OffHookState)
+	if(onHookOnExit && m_OffHookState)
 		OffHook();
 	Jabra_Uninitialize();
 }

@@ -39,7 +39,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 
 	case WM_CLOSE:
 		removeTrayIcon();
-		Jabra::instance()->Exit();
+		Jabra::instance()->Exit(m_settings.OnHookOnExit);
 		DestroyWindow(hDlg);
 		return (INT_PTR)TRUE;
 
@@ -172,7 +172,7 @@ void MainDialog::readSettings()
 	Settings m_config;
 	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
 
-	// ...
+	m_settings.OnHookOnExit = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
 
 	m_config.Exit();
 }
