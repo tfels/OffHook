@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <objbase.h>
 #include <wbemidl.h>
+#include <string>
 
 class WmiEventSink : public IWbemObjectSink
 {
@@ -32,4 +33,5 @@ public:
 
 private:
 	void logClassName(IWbemClassObject* wmiObject);
+	std::string getStringProperty(IWbemClassObject* wmiObject, const char* propertyName);
 };

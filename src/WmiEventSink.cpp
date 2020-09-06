@@ -63,22 +63,15 @@ HRESULT WmiEventSink::Indicate(long lObjectCount, IWbemClassObject** apObjArray)
 		}
 
 		// get name
-		VARIANT varName;
-		hres = processObject->Get(_bstr_t(L"Name"), 0, &varName, 0, 0);
-		if(FAILED(hres)){
-			Log("Failed to get the process name from the Win32_Process object. Error code = 0x%x\r\n", hres);
+		std::string name = getStringProperty(processObject, "Name");
+		Log("Name: %s\r\n", name.c_str());
+		if(name.empty())
 			return WBEM_E_FAILED;
-		}
-		Log("Name: %ls\r\n", V_BSTR(&varName));
-		VariantClear(&varName);
 
-		hres = processObject->Get(_bstr_t(L"ExecutablePath"), 0, &varName, 0, 0);
-		if(FAILED(hres)) {
-			Log("Failed to get the executable path from the Win32_Process object. Error code = 0x%x\r\n", hres);
+		name = getStringProperty(processObject, "ExecutablePath");
+		Log("ExecutablePath: %s\r\n", name.c_str());
+		if(name.empty())
 			return WBEM_E_FAILED;
-		}
-		Log("ExecutablePath: %ls\r\n", V_BSTR(&varName));
-		VariantClear(&varName);
 	}
 
 	return WBEM_S_NO_ERROR;
@@ -121,4 +114,23 @@ void WmiEventSink::logClassName(IWbemClassObject* wmiObject)
 	else
 		Log("Error in getting specified object\r\n");
 	VariantClear(&v);
+}
+
+
+std::string WmiEventSink::getStringProperty(IWbemClassObject* wmiObject, const char* propertyName)
+{
+	// get class name
+	std::string ret;
+	VARIANT v;
+	HRESULT hr;
+	hr = wmiObject->Get(_bstr_t(propertyName), 0, &v, 0, 0);
+	if(SUCCEEDED(hr) && (V_VT(&v) == VT_BSTR)) {
+		_bstr_t name;
+		name.Attach(V_BSTR(&v));
+		ret = (const char*)name; // calls internal GetString()
+		name.Detach();
+	} else
+		Log("Error while getting the property of an WMI object. Error code = 0x%x\r\n", hr);
+	VariantClear(&v);
+	return ret;
 }
