@@ -88,12 +88,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\JabraSDK_Windows_v1.8.3.10\library\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\x86</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,14 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\JabraSDK_Windows_v1.8.3.10\library\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\x86</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -120,12 +120,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\JabraSDK_Windows_v1.8.3.10\library\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,43 +136,43 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\Headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\JabraSDK_Windows_v1.8.3.10\library\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\JabraSDK_Windows_v1.8.3.10\library\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Jabra.cpp" />
-    <ClCompile Include="json-parser\json.c">
+    <ClCompile Include="..\src\Jabra.cpp" />
+    <ClCompile Include="..\src\json-parser\json.c">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4996</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="OffHook.cpp" />
+    <ClCompile Include="..\src\OffHook.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Jabra.h" />
-    <ClInclude Include="json-parser\json.h" />
-    <ClInclude Include="OffHook.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\src\Jabra.h" />
+    <ClInclude Include="..\src\json-parser\json.h" />
+    <ClInclude Include="..\src\OffHook.h" />
+    <ClInclude Include="..\src\rc\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="OffHook.rc" />
+    <ResourceCompile Include="..\src\rc\OffHook.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="images\app.ico" />
-    <Image Include="images\mic_off.bmp" />
-    <Image Include="images\mic_on.bmp" />
-    <Image Include="images\busy_off.bmp" />
-    <Image Include="images\OffHook.bmp" />
-    <Image Include="images\busy_on.bmp" />
-    <Image Include="images\OnHook.bmp" />
+    <Image Include="..\src\rc\images\app.ico" />
+    <Image Include="..\src\rc\images\mic_off.bmp" />
+    <Image Include="..\src\rc\images\mic_on.bmp" />
+    <Image Include="..\src\rc\images\busy_off.bmp" />
+    <Image Include="..\src\rc\images\OffHook.bmp" />
+    <Image Include="..\src\rc\images\busy_on.bmp" />
+    <Image Include="..\src\rc\images\OnHook.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

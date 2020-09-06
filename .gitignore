@@ -1,6 +1,6 @@
-/.vs/
-/Debug/
-/Release/
-/x64/
-*.aps
-*.vcxproj.user
+/prj/.vs/
+/prj/Debug/
+/prj/Release/
+/prj/x64/
+/prj/*.vcxproj.user
+/src/rc/*.aps

@@ -11,66 +11,67 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+      <Extensions>rc;cur;dlg;rc2;rct;bin;rgs;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Resource Files\images">
       <UniqueIdentifier>{8208669c-efae-4e5e-b65a-462150fee8c9}</UniqueIdentifier>
+      <Extensions>ico;bmp;gif;jpg;jpeg;jpe;tiff;tif;png</Extensions>
     </Filter>
     <Filter Include="json-parser">
       <UniqueIdentifier>{778c34c8-c2bc-4261-84eb-1c7fa46e4ddd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OffHook.cpp">
+    <ClCompile Include="..\src\Jabra.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Jabra.cpp">
+    <ClCompile Include="..\src\OffHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="json-parser\json.c">
+    <ClCompile Include="..\src\json-parser\json.c">
       <Filter>json-parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="..\src\Jabra.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Jabra.h">
+    <ClInclude Include="..\src\OffHook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OffHook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="json-parser\json.h">
+    <ClInclude Include="..\src\json-parser\json.h">
       <Filter>json-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rc\resource.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="OffHook.rc">
+    <ResourceCompile Include="..\src\rc\OffHook.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="images\OffHook.bmp">
+    <Image Include="..\src\rc\images\busy_off.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="images\OnHook.bmp">
+    <Image Include="..\src\rc\images\busy_on.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="images\mic_off.bmp">
+    <Image Include="..\src\rc\images\mic_off.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="images\mic_on.bmp">
+    <Image Include="..\src\rc\images\mic_on.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="images\busy_on.bmp">
+    <Image Include="..\src\rc\images\OffHook.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="images\busy_off.bmp">
+    <Image Include="..\src\rc\images\OnHook.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="images\app.ico">
-      <Filter>Resource Files</Filter>
+    <Image Include="..\src\rc\images\app.ico">
+      <Filter>Resource Files\images</Filter>
     </Image>
   </ItemGroup>
 </Project>
