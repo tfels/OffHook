@@ -160,6 +160,7 @@
     </ClCompile>
     <ClCompile Include="..\src\MainDialog.cpp" />
     <ClCompile Include="..\src\OffHook.cpp" />
+    <ClCompile Include="..\src\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Jabra.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\src\MainDialog.h" />
     <ClInclude Include="..\src\OffHook.h" />
     <ClInclude Include="..\src\rc\resource.h" />
+    <ClInclude Include="..\src\Settings.h" />
     <ClInclude Include="..\src\Singleton.h" />
   </ItemGroup>
   <ItemGroup>
