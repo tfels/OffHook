@@ -5,6 +5,7 @@
 #include "rc\resource.h"
 #include "OffHook.h"
 #include "MainDialog.h"
+#include "SettingsDialog.h"
 #include "Jabra.h"
 
 MainDialog* Singleton<MainDialog>::g_instance = nullptr;
@@ -94,6 +95,14 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		case IDC_MUTE:
 			Jabra::instance()->Mute();
 			break;
+		case IDC_SETTINGS:
+		{
+			SettingsDialog dlg;
+			if(dlg.RunModal(g_hInstance, hDlg) == IDOK){
+				// ToDo: re-read settings
+			}
+		}
+		break;
 
 		case IDCLOSE:
 		case IDCANCEL:
