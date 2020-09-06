@@ -34,6 +34,10 @@ static void gBusylightFunc(unsigned short deviceID, bool busylightValue)
 {
 	Jabra::instance()->cbBusylightFunc(deviceID, busylightValue);
 }
+static void gLogDeviceEvent(unsigned short deviceID, char* eventStr)
+{
+	Jabra::instance()->cbLogDeviceEvent(deviceID, eventStr);
+}
 
 // ----------------------------------------
 Jabra::Jabra()
@@ -66,6 +70,16 @@ void Jabra::cbBusylightFunc(unsigned short deviceID, bool busylightValue)
 
 	m_BusyLightState = busylightValue;
 	SetBusyLightIcon(m_BusyLightState);
+}
+void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
+{
+	if(deviceID != deviceId()) {
+		Log("Got a log event for unknown device id (%d)\r\n", deviceID);
+		return;
+	}
+
+	Log("cbLogDeviceEvent called (%s)\r\n", eventStr);
+	//Json* j = new Json(eventStr)
 }
 
 
@@ -131,6 +145,8 @@ bool Jabra::InitDevice()
 	ok = Jabra_IsMuteSupported(deviceId());
 	Log("Mute Supported=%d\r\n", ok);
 	SetMuteIcon(m_MuteState);
+
+	Jabra_RegisterDevLogCallback(gLogDeviceEvent);
 
 	return true;
 }
