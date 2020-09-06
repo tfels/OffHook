@@ -8,7 +8,7 @@
 #pragma comment(lib, "libjabra.lib")
 
 
-Jabra* Jabra::g_instance = nullptr;
+Jabra* Singleton<Jabra>::g_instance = nullptr;
 
 
 static void gFirstScanForDevicesDoneFunc(void)
@@ -84,7 +84,7 @@ void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
 	if(js->type != json_object)
 		return;
 	
-	for(int i = 0; i < js->u.object.length; i++) {
+	for(unsigned int i = 0; i < js->u.object.length; i++) {
 			const char* name = js->u.object.values[i].name;
 			json_value* jv = js->u.object.values[i].value;
 			if(strcmp(name, "Mute State") == 0 && jv->type == json_string) {
