@@ -7,6 +7,7 @@
 #include "MainDialog.h"
 #include "SettingsDialog.h"
 #include "Jabra.h"
+#include "OffHookSettings.h"
 
 MainDialog* Singleton<MainDialog>::g_instance = nullptr;
 
@@ -31,7 +32,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		SendMessageW(hDlg, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 		DestroyIcon(hIcon);
 		}
-		m_config.Init("Tim Felser", "OffHook");
+		readSettings();
 
 		ret = SetTimer(hDlg, IDC_INIT, 100, nullptr);
 		return (INT_PTR)TRUE;
@@ -39,7 +40,6 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 	case WM_CLOSE:
 		removeTrayIcon();
 		Jabra::instance()->Exit();
-		m_config.Exit();
 		DestroyWindow(hDlg);
 		return (INT_PTR)TRUE;
 
@@ -98,8 +98,8 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		case IDC_SETTINGS:
 		{
 			SettingsDialog dlg;
-			if(dlg.RunModal(g_hInstance, hDlg) == IDOK){
-				// ToDo: re-read settings
+			if(dlg.RunModal(g_hInstance, hDlg) == IDOK) {
+				readSettings();
 			}
 		}
 		break;
@@ -164,6 +164,17 @@ void MainDialog::addTrayIcon(HWND hWnd)
 void MainDialog::removeTrayIcon()
 {
 	BOOL ret = Shell_NotifyIcon(NIM_DELETE, &g_niData);
+}
+
+//----------------------------------------------------------------------
+void MainDialog::readSettings()
+{
+	Settings m_config;
+	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
+
+	// ...
+
+	m_config.Exit();
 }
 
 //----------------------------------------------------------------------

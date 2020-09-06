@@ -2,6 +2,7 @@
 
 #include "Singleton.h"
 #include "Settings.h"
+#include "OffHookSettings.h"
 
 class MainDialog :public Singleton<MainDialog>
 {
@@ -25,8 +26,8 @@ private:
 	void _setButtonImage(int controlId, int imageId);
 	void addTrayIcon(HWND hWnd);
 	void removeTrayIcon();
+	void readSettings();
 
 private:
-	Settings m_config;
+	struct OffHookSettings m_settings;
 };
-
