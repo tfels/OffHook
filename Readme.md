@@ -7,9 +7,14 @@ If you do not set the headset to off-hook state, an incomming call will capture 
 
 ## Prerequisites
 
-You'll need the [Jabra SDK](https://developer.jabra.com/site/global/sdks/windows/index.gsp).
+You'll need the two libraies `JabraSDK.dll` and `libjabra.dll` from the [Jabra SDK](https://developer.jabra.com/site/global/sdks/windows/index.gsp) for communicating with a Jabra headset.
 
+## Dependencies
 
+This project uses an external component for JSON parsing. The source code is included as a git submodule directly from its original git repository at https://github.com/udp/json-parser.
+
+The JSON parser is `Copyright (C) 2012, 2013 James McLaughlin et al.  All rights reserved.`
+ 
 ## Authors
 
 * Tim Felser
