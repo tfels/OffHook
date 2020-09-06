@@ -22,13 +22,14 @@ public:
 public: // internal callbacks
 	void cbDeviceAttached(Jabra_DeviceInfo deviceInfo);
 	void cbFirstScanForDevicesDone();
+	void cbBusylightFunc(unsigned short deviceID, bool busylightValue);
 
 private: // constructors
 	Jabra();
 	Jabra(const Jabra&);
 	~Jabra();
 private:
-	unsigned short deviceID() const { return m_deviceInfo.deviceID; }
+	unsigned short deviceId() const { return m_deviceInfo.deviceID; }
 
 private:
 	static Jabra* g_instance;

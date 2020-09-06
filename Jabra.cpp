@@ -30,7 +30,10 @@ static void gButtonInDataTranslatedFunc(unsigned short deviceID, Jabra_HidInput 
 {
 	Log("ButtonInDataTranslatedFunc called\n");
 }
-
+static void gBusylightFunc(unsigned short deviceID, bool busylightValue)
+{
+	Jabra::instance()->cbBusylightFunc(deviceID, busylightValue);
+}
 
 // ----------------------------------------
 Jabra::Jabra()
@@ -54,6 +57,17 @@ void Jabra::cbFirstScanForDevicesDone()
 {
 	InitDevice();
 }
+void Jabra::cbBusylightFunc(unsigned short deviceID, bool busylightValue)
+{
+	if(deviceID != deviceId()) {
+		Log("Got a busy light event for unknown device id (%d)\n", deviceID);
+		return;
+	}
+
+	m_BusyLightState = busylightValue;
+	SetBusyLightIcon(m_BusyLightState);
+}
+
 
 
 // ----------------------------------------
@@ -97,19 +111,19 @@ bool Jabra::InitDevice()
 {
 	bool ok;
 	
-	ok = Jabra_IsOffHookSupported(deviceID());
+	ok = Jabra_IsOffHookSupported(deviceId());
 	Log("OffHook Supported=%d\n", ok);
 	SetOffHookIcon(m_OffHookState);
 
-	ok = Jabra_IsBusylightSupported(deviceID());
+	ok = Jabra_IsBusylightSupported(deviceId());
 	Log("Busylight Supported=%d\n", ok);
 
-	ok = Jabra_GetBusylightStatus(deviceID());
+	ok = Jabra_GetBusylightStatus(deviceId());
 	Log("Busylight Status=%d\n", ok);
 	m_BusyLightState = ok;
 	SetBusyLightIcon(m_BusyLightState);
 
-	// Jabra_RegisterBusylightEvent
+	Jabra_RegisterBusylightEvent(gBusylightFunc);
 
 	return true;
 }
@@ -124,10 +138,11 @@ void Jabra::Exit()
 
 bool Jabra::OffHook()
 {
-	Jabra_ReturnCode ret = Jabra_SetOffHook(deviceID(), !m_OffHookState);
-	if (ret == Return_Ok)
+	Jabra_ReturnCode ret = Jabra_SetOffHook(deviceId(), !m_OffHookState);
+	if(ret == Return_Ok) {
 		m_OffHookState = !m_OffHookState;
-	else
+		cbBusylightFunc(m_deviceInfo.deviceID, m_OffHookState);
+	}  else
 		Log("ERROR: SetOffHook failed with ret=%d\n", ret);
 
 	SetOffHookIcon(m_OffHookState);
@@ -136,12 +151,10 @@ bool Jabra::OffHook()
 
 bool Jabra::Busy()
 {
-	Jabra_ReturnCode ret = Jabra_SetBusylightStatus(deviceID(), !m_BusyLightState);
-	if (ret == Return_Ok)
+	Jabra_ReturnCode ret = Jabra_SetBusylightStatus(deviceId(), !m_BusyLightState);
+	if(ret == Return_Ok)
 		m_BusyLightState = !m_BusyLightState;
 
 	SetBusyLightIcon(m_BusyLightState);
 	return m_BusyLightState;
-
-	return false;
 }
