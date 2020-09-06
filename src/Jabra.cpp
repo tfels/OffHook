@@ -3,10 +3,11 @@
 #include <JabraNativeHid.h>
 #include "json-parser/json.h"
 #include "Jabra.h"
-#include "OffHook.h"
+#include "MainDialog.h"
 
 #pragma comment(lib, "libjabra.lib")
 
+#define Log MainDialog::instance()->Log
 
 Jabra* Singleton<Jabra>::g_instance = nullptr;
 
@@ -70,7 +71,7 @@ void Jabra::cbBusylightFunc(unsigned short deviceID, bool busylightValue)
 	}
 
 	m_BusyLightState = busylightValue;
-	SetBusyLightIcon(m_BusyLightState);
+	MainDialog::instance()->SetBusyLightIcon(m_BusyLightState);
 }
 void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
 {
@@ -92,7 +93,7 @@ void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
 					m_MuteState = true;
 				else if(strncmp(jv->u.string.ptr, "FALSE", jv->u.string.length) == 0)
 					m_MuteState = false;
-				SetMuteIcon(m_MuteState);
+				MainDialog::instance()->SetMuteIcon(m_MuteState);
 			}
 		}
 
@@ -146,7 +147,7 @@ bool Jabra::InitDevice()
 	// OffHook
 	ok = Jabra_IsOffHookSupported(deviceId());
 	Log("OffHook Supported=%d\r\n", ok);
-	SetOffHookIcon(m_OffHookState);
+	MainDialog::instance()->SetOffHookIcon(m_OffHookState);
 
 	// Busylight
 	ok = Jabra_IsBusylightSupported(deviceId());
@@ -155,14 +156,14 @@ bool Jabra::InitDevice()
 	ok = Jabra_GetBusylightStatus(deviceId());
 	Log("Busylight Status=%d\r\n", ok);
 	m_BusyLightState = ok;
-	SetBusyLightIcon(m_BusyLightState);
+	MainDialog::instance()->SetBusyLightIcon(m_BusyLightState);
 
 	Jabra_RegisterBusylightEvent(gBusylightFunc);
 
 	// Mute
 	ok = Jabra_IsMuteSupported(deviceId());
 	Log("Mute Supported=%d\r\n", ok);
-	SetMuteIcon(m_MuteState);
+	MainDialog::instance()->SetMuteIcon(m_MuteState);
 
 	// Logging for mute state
 	ret = Jabra_EnableDevLog(deviceId(), true);
@@ -194,7 +195,7 @@ bool Jabra::OffHook()
 	}  else
 		Log("ERROR: SetOffHook failed with ret=%d\r\n", ret);
 
-	SetOffHookIcon(m_OffHookState);
+	MainDialog::instance()->SetOffHookIcon(m_OffHookState);
 	return m_OffHookState;
 }
 
@@ -204,7 +205,7 @@ bool Jabra::Busy()
 	if(ret == Return_Ok)
 		m_BusyLightState = !m_BusyLightState;
 
-	SetBusyLightIcon(m_BusyLightState);
+	MainDialog::instance()->SetBusyLightIcon(m_BusyLightState);
 	return m_BusyLightState;
 }
 
