@@ -3,4 +3,7 @@
 /prj/Release/
 /prj/x64/
 /prj/*.vcxproj.user
+
 /src/rc/*.aps
+
+/build

@@ -1,0 +1,93 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "create build directory",
+			"command": "cmd",
+			"args": [
+				"/C", "if not exist ${workspaceFolder}\\build\\ mkdir ${workspaceFolder}\\build\\"
+			]
+		},
+		{
+			"type": "shell",
+			"label": "compile",
+			"command": "cl.exe",
+			"args": [
+				"/c",
+				"/sdl", "/RTC1", "/GS",
+				"/Zi",
+				"/EHsc",
+				"/FC",
+				"..\\src\\*.cpp",
+				"/wd4996", "..\\src\\json-parser\\*.c"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}\\build"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"dependsOn": [
+                "create build directory"
+            ],
+		},
+		{
+			"type": "shell",
+			"label": "resource",
+			"command": "rc.exe",
+			"args": [
+				"/fo.\\OffHook.res",
+				"..\\src\\rc\\OffHook.rc",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}\\build"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"dependsOn": [
+                "create build directory"
+            ],
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: Build OffHook.exe",
+			"command": "link.exe",
+			"args": [
+				".\\*.obj",
+				"User32.lib", "Gdi32.lib", "Advapi32.lib", "Shell32.lib",
+				"/SUBSYSTEM:WINDOWS",
+				"/OUT:OffHook.exe"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}\\build"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"dependsOn": [
+				"resource",
+				"compile"
+            ],
+		},
+		{
+			"type": "shell",
+			"label": "msbuild",
+			"command": "msbuild.exe",
+			"args": [
+				"prj\\OffHook.vcxproj"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
