@@ -166,8 +166,9 @@ void MainDialog::Log(const TCHAR* aFormat, ...)
 
 	va_end(stArg);
 	buf[sizeof(buf) - 1] = '\0';
-	
-	SendDlgItemMessage(g_hMainDlg, IDC_LOG, EM_SETSEL, -1, -1);
-	SendDlgItemMessage(g_hMainDlg, IDC_LOG, EM_REPLACESEL, FALSE, (LPARAM)buf);
-	SendDlgItemMessage(g_hMainDlg, IDC_LOG, WM_VSCROLL, SB_BOTTOM, (LPARAM)NULL);
+
+	HWND hLogCtrl = GetDlgItem(g_hMainDlg, IDC_LOG);
+	SendMessage(hLogCtrl, EM_SETSEL, -1, -1);
+	SendMessage(hLogCtrl, EM_REPLACESEL, FALSE, (LPARAM)buf);
+	SendMessage(hLogCtrl, WM_VSCROLL, SB_BOTTOM, (LPARAM)NULL);
 }
