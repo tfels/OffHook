@@ -1,6 +1,7 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <JabraNativeHid.h>
+#include "json-parser/json.h"
 #include "Jabra.h"
 #include "OffHook.h"
 
@@ -78,8 +79,24 @@ void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
 		return;
 	}
 
-	Log("cbLogDeviceEvent called (%s)\r\n", eventStr);
-	//Json* j = new Json(eventStr)
+	// decode JSON
+	json_value* js = json_parse(eventStr, strlen(eventStr));
+	if(js->type != json_object)
+		return;
+	
+	for(int i = 0; i < js->u.object.length; i++) {
+			const char* name = js->u.object.values[i].name;
+			json_value* jv = js->u.object.values[i].value;
+			if(strcmp(name, "Mute State") == 0 && jv->type == json_string) {
+				if(strncmp(jv->u.string.ptr, "TRUE", jv->u.string.length) == 0)
+					m_MuteState = true;
+				else if(strncmp(jv->u.string.ptr, "FALSE", jv->u.string.length) == 0)
+					m_MuteState = false;
+				SetMuteIcon(m_MuteState);
+			}
+		}
+
+	json_value_free(js);
 }
 
 
@@ -93,7 +110,7 @@ bool Jabra::InitSdk()
 
 	char ver[256];
 	Jabra_ReturnCode ret = Jabra_GetVersion(ver, sizeof(ver));
-	if (ret != Return_Ok) {
+	if(ret != Return_Ok) {
 		Log("failed to determine Jabra SDK version!\r\n");
 		return false;
 	}
@@ -124,6 +141,7 @@ bool Jabra::InitSdk()
 bool Jabra::InitDevice()
 {
 	bool ok;
+	Jabra_ReturnCode ret;
 	
 	// OffHook
 	ok = Jabra_IsOffHookSupported(deviceId());
@@ -146,6 +164,14 @@ bool Jabra::InitDevice()
 	Log("Mute Supported=%d\r\n", ok);
 	SetMuteIcon(m_MuteState);
 
+	// Logging for mute state
+	ret = Jabra_EnableDevLog(deviceId(), true);
+	if(ret != Return_Ok) {
+		Log("failed to enable logging!\r\n");
+		Log("--> mute state is not updated!\r\n");
+	}
+	ok = Jabra_IsDevLogEnabled(deviceId());
+	Log("Device Log Enabled=%d=%d\r\n", ok);
 	Jabra_RegisterDevLogCallback(gLogDeviceEvent);
 
 	return true;
@@ -188,6 +214,7 @@ bool Jabra::Mute()
 	if(ret == Return_Ok)
 		m_MuteState = !m_MuteState;
 
-	SetMuteIcon(m_MuteState);
+	// icon is switched by the log event
+	//SetMuteIcon(m_MuteState);
 	return m_MuteState;
 }
