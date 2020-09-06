@@ -65,6 +65,9 @@ bool SettingsDialog::ReadSettings(HWND hDlg)
 	val.b = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
 	SendDlgItemMessage(hDlg, IDC_ONHOOK_EXIT, BM_SETCHECK, val.b == true ? BST_CHECKED : BST_UNCHECKED, 0);
 
+	val.b = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
+	SendDlgItemMessage(hDlg, IDC_MINIMIZE_TO_TRAY, BM_SETCHECK, val.b == true ? BST_CHECKED : BST_UNCHECKED, 0);
+
 	return true;
 }
 
@@ -75,6 +78,9 @@ bool SettingsDialog::SaveSettings(HWND hDlg)
 
 	res = SendDlgItemMessage(hDlg, IDC_ONHOOK_EXIT, BM_GETCHECK, 0, 0);
 	ret &= m_config.SaveBool(SETTINGS_ONHOOK_ON_EXIT, res == BST_CHECKED ? true : false);
+
+	res = SendDlgItemMessage(hDlg, IDC_MINIMIZE_TO_TRAY, BM_GETCHECK, 0, 0);
+	ret &= m_config.SaveBool(SETTINGS_MINIMIZE_TO_TRAY, res == BST_CHECKED ? true : false);
 
 	return ret;
 }

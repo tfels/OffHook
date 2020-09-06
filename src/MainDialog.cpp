@@ -58,16 +58,16 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		break;
 
 	case WM_SIZE:
-	{
-		static LONG s_prevExState;
-		if(wParam == SIZE_MINIMIZED) {
-			addTrayIcon(hDlg);
-			s_prevExState = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
-		} else if(wParam == SIZE_RESTORED) {
-			SetWindowLong(hDlg, GWL_EXSTYLE, s_prevExState);
-			removeTrayIcon();
+		if(m_settings.MinimizeToTray) {
+			static LONG s_prevExState;
+			if(wParam == SIZE_MINIMIZED) {
+				addTrayIcon(hDlg);
+				s_prevExState = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
+			} else if(wParam == SIZE_RESTORED) {
+				SetWindowLong(hDlg, GWL_EXSTYLE, s_prevExState);
+				removeTrayIcon();
+			}
 		}
-	}
 		break;
 
 	case WM_TRAY_ICON:
@@ -172,7 +172,8 @@ void MainDialog::readSettings()
 	Settings m_config;
 	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
 
-	m_settings.OnHookOnExit = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	m_settings.OnHookOnExit   = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	m_settings.MinimizeToTray = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
 
 	m_config.Exit();
 }
