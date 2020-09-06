@@ -158,6 +158,10 @@
   <ItemGroup>
     <ResourceCompile Include="OffHook.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="off.bmp" />
+    <Image Include="on.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

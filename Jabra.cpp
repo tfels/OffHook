@@ -108,6 +108,7 @@ bool Jabra::InitDevice()
 	ok = Jabra_GetBusylightStatus(deviceID());
 	Log("Busylight Status=%d\n", ok);
 	m_BusyLightState = ok;
+	SetBusyLightIcon(m_BusyLightState);
 
 	// Jabra_RegisterBusylightEvent
 
@@ -130,6 +131,7 @@ bool Jabra::Busy()
 	if (ret == Return_Ok)
 		m_BusyLightState = !m_BusyLightState;
 
+	SetBusyLightIcon(m_BusyLightState);
 	return m_BusyLightState;
 
 	return false;

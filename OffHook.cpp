@@ -1,12 +1,15 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <strsafe.h>
+#include <commctrl.h>
 #include "resource.h"
 #include "Jabra.h"
 
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+HINSTANCE g_hInstance;
 HWND g_hMainDlg;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -16,6 +19,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
+	
+	g_hInstance = hInstance;
 
 	g_hMainDlg = CreateDialogParam(hInstance, MAKEINTRESOURCE(IDD_MAIN), 0, DialogProc, 0);
 	ShowWindow(g_hMainDlg, nCmdShow);
@@ -75,7 +80,7 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDC_INIT:
 			Jabra::instance()->InitSdk();
 			break;
-		case IDC_BUSY:
+		case IDC_BUSYLIGHT:
 			Jabra::instance()->Busy();
 			break;
 		case IDC_HOOK:
@@ -93,6 +98,24 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
+void SetBusyLightIcon(bool state)
+{
+	int imageId;
+	if(state)
+		imageId = IDB_ON;
+	else
+		imageId = IDB_OFF;
+
+	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT);
+	HANDLE hOld = (HANDLE)SendDlgItemMessage(g_hMainDlg, IDC_BUSYLIGHT, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)handle);
+	if(hOld != handle)
+		DeleteObject(hOld);
+
+	BITMAP bitmapInfo;
+	GetObject(handle, sizeof(BITMAP), &bitmapInfo);
+	SetWindowPos(GetDlgItem(g_hMainDlg, IDC_BUSYLIGHT), 0, 0, 0, bitmapInfo.bmWidth, bitmapInfo.bmHeight, SWP_NOMOVE | SWP_NOZORDER);
+}
+
 void Log(const TCHAR* aFormat, ...)
 {
 	TCHAR buf[256];
@@ -108,5 +131,4 @@ void Log(const TCHAR* aFormat, ...)
 	
 	SendDlgItemMessage(g_hMainDlg, IDC_LOG, EM_SETSEL, -1, -1);
 	SendDlgItemMessage(g_hMainDlg, IDC_LOG, EM_REPLACESEL, TRUE, (LPARAM)buf);
-	//SendDlgItemMessage(g_hMainDlg, IDC_LOG, WM_SETTEXT, 0, (LPARAM)buf);
 }

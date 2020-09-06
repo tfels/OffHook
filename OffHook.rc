@@ -58,7 +58,7 @@ BEGIN
     DEFPUSHBUTTON   "Exit",IDCLOSE,252,155,50,14
     PUSHBUTTON      "Init",IDC_INIT,252,7,50,14
     PUSHBUTTON      "OffHook",IDC_HOOK,7,7,50,14
-    PUSHBUTTON      "Toggle",IDC_BUSY,79,18,42,14
+    PUSHBUTTON      "Toggle",IDC_BUSYLIGHT,79,18,102,31,BS_BITMAP
     EDITTEXT        IDC_LOG,7,68,295,78,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
     LTEXT           "Log:",IDC_STATIC,7,58,15,8
     LTEXT           "Busy Light",IDC_STATIC,79,7,34,8
@@ -93,6 +93,16 @@ IDD_MAIN AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_OFF                 BITMAP                  "off.bmp"
+
+IDB_ON                  BITMAP                  "on.bmp"
 
 #endif    // German (Germany) resources
 /////////////////////////////////////////////////////////////////////////////
