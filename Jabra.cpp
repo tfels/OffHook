@@ -20,15 +20,15 @@ static void gDeviceAttachedFunc(Jabra_DeviceInfo deviceInfo)
 }
 static void gDeviceRemovedFunc(unsigned short deviceID)
 {
-	Log("DeviceRemovedFunc called\n");
+	Log("DeviceRemovedFunc called\r\n");
 }
 static void gButtonInDataRawHidFunc(unsigned short deviceID, unsigned short usagePage, unsigned short usage, bool buttonInData)
 {
-	Log("ButtonInDataRawHidFunc called\n");
+	Log("ButtonInDataRawHidFunc called\r\n");
 }
 static void gButtonInDataTranslatedFunc(unsigned short deviceID, Jabra_HidInput translatedInData, bool buttonInData)
 {
-	Log("ButtonInDataTranslatedFunc called\n");
+	Log("ButtonInDataTranslatedFunc called\r\n");
 }
 static void gBusylightFunc(unsigned short deviceID, bool busylightValue)
 {
@@ -51,7 +51,7 @@ Jabra::~Jabra()
 void Jabra::cbDeviceAttached(Jabra_DeviceInfo deviceInfo)
 {
 	m_deviceInfo = deviceInfo;
-	Log("DeviceAttachedFunc: using device \"%s\"\n", deviceInfo.deviceName);
+	Log("DeviceAttachedFunc: using device \"%s\"\r\n", deviceInfo.deviceName);
 }
 void Jabra::cbFirstScanForDevicesDone()
 {
@@ -60,7 +60,7 @@ void Jabra::cbFirstScanForDevicesDone()
 void Jabra::cbBusylightFunc(unsigned short deviceID, bool busylightValue)
 {
 	if(deviceID != deviceId()) {
-		Log("Got a busy light event for unknown device id (%d)\n", deviceID);
+		Log("Got a busy light event for unknown device id (%d)\r\n", deviceID);
 		return;
 	}
 
@@ -80,10 +80,10 @@ bool Jabra::InitSdk()
 	char ver[256];
 	Jabra_ReturnCode ret = Jabra_GetVersion(ver, sizeof(ver));
 	if (ret != Return_Ok) {
-		Log("failed to determine Jabra SDK version!\n");
+		Log("failed to determine Jabra SDK version!\r\n");
 		return false;
 	}
-	Log("found Jabra SDK version: %s\n", ver);
+	Log("found Jabra SDK version: %s\r\n", ver);
 	
 	Jabra_SetAppID("qx9c9/w8FCa+KdvDwsGrCMOPqQXqeAgEQ1atKLY7BXE=");
 
@@ -99,7 +99,7 @@ bool Jabra::InitSdk()
 		instance,
 		&configParams);
 	if (!ok) {
-		Log("failed to initialize Jabra SDK!\n");
+		Log("failed to initialize Jabra SDK!\r\n");
 		return false;
 	}
 
@@ -113,15 +113,15 @@ bool Jabra::InitDevice()
 	
 	// OffHook
 	ok = Jabra_IsOffHookSupported(deviceId());
-	Log("OffHook Supported=%d\n", ok);
+	Log("OffHook Supported=%d\r\n", ok);
 	SetOffHookIcon(m_OffHookState);
 
 	// Busylight
 	ok = Jabra_IsBusylightSupported(deviceId());
-	Log("Busylight Supported=%d\n", ok);
+	Log("Busylight Supported=%d\r\n", ok);
 
 	ok = Jabra_GetBusylightStatus(deviceId());
-	Log("Busylight Status=%d\n", ok);
+	Log("Busylight Status=%d\r\n", ok);
 	m_BusyLightState = ok;
 	SetBusyLightIcon(m_BusyLightState);
 
@@ -129,7 +129,7 @@ bool Jabra::InitDevice()
 
 	// Mute
 	ok = Jabra_IsMuteSupported(deviceId());
-	Log("Mute Supported=%d\n", ok);
+	Log("Mute Supported=%d\r\n", ok);
 	SetMuteIcon(m_MuteState);
 
 	return true;
@@ -150,7 +150,7 @@ bool Jabra::OffHook()
 		m_OffHookState = !m_OffHookState;
 		cbBusylightFunc(m_deviceInfo.deviceID, m_OffHookState);
 	}  else
-		Log("ERROR: SetOffHook failed with ret=%d\n", ret);
+		Log("ERROR: SetOffHook failed with ret=%d\r\n", ret);
 
 	SetOffHookIcon(m_OffHookState);
 	return m_OffHookState;
