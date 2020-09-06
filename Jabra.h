@@ -15,6 +15,7 @@ public:
 
 	bool InitSdk();
 	bool InitDevice();
+	void Exit();
 	bool Busy();
 	bool OffHook();
 

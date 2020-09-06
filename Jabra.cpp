@@ -39,9 +39,8 @@ Jabra::Jabra()
 
 Jabra::~Jabra()
 {
-	Jabra_Uninitialize();
+	Exit();
 }
-
 
 // ----------------------------------------
 // SDK callbacks
@@ -57,12 +56,13 @@ void Jabra::cbFirstScanForDevicesDone()
 }
 
 
-
 // ----------------------------------------
 // public funcs
 // ----------------------------------------
 bool Jabra::InitSdk()
 {
+	Exit();
+
 	char ver[256];
 	Jabra_ReturnCode ret = Jabra_GetVersion(ver, sizeof(ver));
 	if (ret != Return_Ok) {
@@ -71,8 +71,6 @@ bool Jabra::InitSdk()
 	}
 	Log("found Jabra SDK version: %s\n", ver);
 	
-	Jabra_Uninitialize();
-
 	Jabra_SetAppID("qx9c9/w8FCa+KdvDwsGrCMOPqQXqeAgEQ1atKLY7BXE=");
 
 	unsigned int instance = 1;
@@ -116,12 +114,21 @@ bool Jabra::InitDevice()
 	return true;
 }
 
+void Jabra::Exit()
+{
+	if(m_OffHookState)
+		OffHook();
+	Jabra_Uninitialize();
+}
+
 
 bool Jabra::OffHook()
 {
 	Jabra_ReturnCode ret = Jabra_SetOffHook(deviceID(), !m_OffHookState);
 	if (ret == Return_Ok)
 		m_OffHookState = !m_OffHookState;
+	else
+		Log("ERROR: SetOffHook failed with ret=%d\n", ret);
 
 	SetOffHookIcon(m_OffHookState);
 	return m_OffHookState;
