@@ -52,7 +52,7 @@ END
 
 IDD_MAIN DIALOGEX 0, 0, 309, 176
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
+CAPTION "OffHook"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Exit",IDCLOSE,252,155,50,14
@@ -111,6 +111,16 @@ IDB_ONHOOK              BITMAP                  "images\\OnHook.bmp"
 IDB_MIC_ON              BITMAP                  "images\\mic_on.bmp"
 
 IDB_MIC_OFF             BITMAP                  "images\\mic_off.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APP                 ICON                    "images\\app.ico"
 
 #endif    // German (Germany) resources
 /////////////////////////////////////////////////////////////////////////////

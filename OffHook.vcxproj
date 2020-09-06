@@ -166,6 +166,7 @@
     <ResourceCompile Include="OffHook.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="images\app.ico" />
     <Image Include="images\mic_off.bmp" />
     <Image Include="images\mic_on.bmp" />
     <Image Include="images\busy_off.bmp" />

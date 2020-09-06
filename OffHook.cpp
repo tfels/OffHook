@@ -53,6 +53,12 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+		{
+		HICON hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
+		SendMessageW(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+		SendMessageW(hDlg, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		DestroyIcon(hIcon);
+		}
 		ret = SetTimer(hDlg, IDC_INIT, 100, nullptr);
 		return (INT_PTR)TRUE;
 

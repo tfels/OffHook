@@ -9,6 +9,7 @@
 #define IDB_ONHOOK                      105
 #define IDB_MIC_ON                      106
 #define IDB_MIC_OFF                     107
+#define IDI_APP                         108
 #define IDC_INIT                        1001
 #define IDC_OFFHOOK                     1002
 #define IDC_BUSY                        1003
@@ -20,7 +21,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        108
+#define _APS_NEXT_RESOURCE_VALUE        109
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           101
