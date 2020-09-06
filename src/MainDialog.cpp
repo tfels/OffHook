@@ -34,6 +34,8 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		return (INT_PTR)TRUE;
 
 	case WM_CLOSE:
+		removeTrayIcon();
+		Jabra::instance()->Exit();
 		DestroyWindow(hDlg);
 		return (INT_PTR)TRUE;
 
@@ -92,7 +94,6 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 
 		case IDCLOSE:
 		case IDCANCEL:
-			removeTrayIcon();
 			SendMessage(hDlg, WM_CLOSE, 0, 0);
 			return TRUE;
 		}
