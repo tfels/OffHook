@@ -2,13 +2,23 @@
 #include <windows.h>
 #include <strsafe.h>
 #include <commctrl.h>
+#include <shellapi.h>
+#include "OffHook.h"
 #include "resource.h"
 #include "Jabra.h"
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+// some defines
+#define ID_TRAY_ICON 1
+#define WM_TRAY_ICON (WM_APP+1)
 
+// function prototypes
+static INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+static void addTrayIcon(HWND hWnd);
+static void removeTrayIcon();
+
+// global variables
 HINSTANCE g_hInstance;
 HWND g_hMainDlg;
 
@@ -80,6 +90,29 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
+	case WM_SIZE:
+	{
+		static LONG s_prevExState;
+		if(wParam == SIZE_MINIMIZED) {
+			addTrayIcon(hDlg);
+			s_prevExState = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
+		} else if(wParam == SIZE_RESTORED) {
+			SetWindowLong(hDlg, GWL_EXSTYLE, s_prevExState);
+			removeTrayIcon();
+		}
+	}
+		break;
+
+	case WM_TRAY_ICON:
+		if(wParam == ID_TRAY_ICON) {
+			switch(lParam)
+			{
+			case WM_LBUTTONDBLCLK:
+				ShowWindow(hDlg, SW_RESTORE);
+			}
+		}
+		break;
+
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
@@ -98,6 +131,7 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case IDCLOSE:
 		case IDCANCEL:
+			removeTrayIcon();
 			SendMessage(hDlg, WM_CLOSE, 0, 0);
 			return TRUE;
 		}
@@ -107,6 +141,9 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
+//----------------------------------------------------------------------
+// status icon handling
+//----------------------------------------------------------------------
 void _setButtonImage(int controlId, int imageId)
 {
 	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT);
@@ -134,7 +171,28 @@ void SetMuteIcon(bool state)
 	_setButtonImage(IDC_MUTE, state ? IDB_MIC_OFF : IDB_MIC_ON);
 }
 
+//----------------------------------------------------------------------
+// tray icon handling
+//----------------------------------------------------------------------
+static NOTIFYICONDATA g_niData = {0};
 
+void addTrayIcon(HWND hWnd)
+{
+	ZeroMemory(&g_niData, sizeof(g_niData));
+	g_niData.cbSize = sizeof(NOTIFYICONDATA);
+	g_niData.hWnd = hWnd;
+	g_niData.uID = ID_TRAY_ICON;
+	g_niData.uFlags = NIF_ICON | NIF_MESSAGE;
+	g_niData.hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
+	g_niData.uCallbackMessage = WM_TRAY_ICON;
+	BOOL ret = Shell_NotifyIcon(NIM_ADD, &g_niData);
+}
+void removeTrayIcon()
+{
+	BOOL ret = Shell_NotifyIcon(NIM_DELETE, &g_niData);
+}
+
+//----------------------------------------------------------------------
 void Log(const TCHAR* aFormat, ...)
 {
 	TCHAR buf[256];
