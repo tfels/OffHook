@@ -108,7 +108,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 //----------------------------------------------------------------------
 void MainDialog::_setButtonImage(int controlId, int imageId)
 {
-	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT);
+	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT | LR_LOADMAP3DCOLORS);
 	HANDLE hOld = (HANDLE)SendDlgItemMessage(g_hMainDlg, controlId, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)handle);
 	if(hOld && hOld != handle)
 		DeleteObject(hOld);
