@@ -45,5 +45,11 @@
     <Image Include="off.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="OffHook.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="OnHook.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

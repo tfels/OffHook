@@ -101,6 +101,7 @@ bool Jabra::InitDevice()
 	
 	ok = Jabra_IsOffHookSupported(deviceID());
 	Log("OffHook Supported=%d\n", ok);
+	SetOffHookIcon(m_OffHookState);
 
 	ok = Jabra_IsBusylightSupported(deviceID());
 	Log("Busylight Supported=%d\n", ok);
@@ -122,6 +123,7 @@ bool Jabra::OffHook()
 	if (ret == Return_Ok)
 		m_OffHookState = !m_OffHookState;
 
+	SetOffHookIcon(m_OffHookState);
 	return m_OffHookState;
 }
 

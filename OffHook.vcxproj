@@ -160,7 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="off.bmp" />
+    <Image Include="OffHook.bmp" />
     <Image Include="on.bmp" />
+    <Image Include="OnHook.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

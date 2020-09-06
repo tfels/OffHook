@@ -57,11 +57,10 @@ FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Exit",IDCLOSE,252,155,50,14
     PUSHBUTTON      "Init",IDC_INIT,252,7,50,14
-    PUSHBUTTON      "OffHook",IDC_HOOK,7,7,50,14
-    PUSHBUTTON      "Toggle",IDC_BUSYLIGHT,79,18,102,31,BS_BITMAP
-    EDITTEXT        IDC_LOG,7,68,295,78,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
-    LTEXT           "Log:",IDC_STATIC,7,58,15,8
-    LTEXT           "Busy Light",IDC_STATIC,79,7,34,8
+    PUSHBUTTON      "OffHook",IDC_OFFHOOK,7,7,87,73,BS_BITMAP
+    PUSHBUTTON      "Toggle",IDC_BUSYLIGHT,99,20,102,31,BS_BITMAP
+    EDITTEXT        IDC_LOG,7,86,295,60,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
+    LTEXT           "Busy Light",IDC_STATIC,98,7,34,8
 END
 
 
@@ -103,6 +102,10 @@ END
 IDB_OFF                 BITMAP                  "off.bmp"
 
 IDB_ON                  BITMAP                  "on.bmp"
+
+IDB_OFFHOOK             BITMAP                  "OffHook.bmp"
+
+IDB_ONHOOK              BITMAP                  "OnHook.bmp"
 
 #endif    // German (Germany) resources
 /////////////////////////////////////////////////////////////////////////////

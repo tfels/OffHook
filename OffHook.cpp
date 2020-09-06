@@ -83,7 +83,7 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDC_BUSYLIGHT:
 			Jabra::instance()->Busy();
 			break;
-		case IDC_HOOK:
+		case IDC_OFFHOOK:
 			Jabra::instance()->OffHook();
 			break;
 
@@ -98,6 +98,25 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
+void SetOffHookIcon(bool state)
+{
+	int imageId;
+	if(state)
+		imageId = IDB_OFFHOOK;
+	else
+		imageId = IDB_ONHOOK;
+
+	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT);
+	HANDLE hOld = (HANDLE)SendDlgItemMessage(g_hMainDlg, IDC_OFFHOOK, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)handle);
+	if(hOld && hOld != handle)
+		DeleteObject(hOld);
+
+	BITMAP bitmapInfo;
+	GetObject(handle, sizeof(BITMAP), &bitmapInfo);
+	SetWindowPos(GetDlgItem(g_hMainDlg, IDC_OFFHOOK), 0, 0, 0, bitmapInfo.bmWidth, bitmapInfo.bmHeight, SWP_NOMOVE | SWP_NOZORDER);
+}
+
+
 void SetBusyLightIcon(bool state)
 {
 	int imageId;
@@ -108,7 +127,7 @@ void SetBusyLightIcon(bool state)
 
 	HANDLE handle = LoadImage(g_hInstance, MAKEINTRESOURCE(imageId), IMAGE_BITMAP, 0, 0, LR_LOADTRANSPARENT);
 	HANDLE hOld = (HANDLE)SendDlgItemMessage(g_hMainDlg, IDC_BUSYLIGHT, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)handle);
-	if(hOld != handle)
+	if(hOld && hOld != handle)
 		DeleteObject(hOld);
 
 	BITMAP bitmapInfo;
