@@ -1,17 +1,17 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
-#include <JabraNativeHid.h>
+//#include <JabraNativeHid.h>
 #include "json-parser/json.h"
 #include "Jabra.h"
 #include "MainDialog.h"
 
-#pragma comment(lib, "libjabra.lib")
+//#pragma comment(lib, "libjabra.lib")
 
 #define Log MainDialog::instance()->Log
 
 Jabra* Singleton<Jabra>::g_instance = nullptr;
 
-
+/*
 static void gFirstScanForDevicesDoneFunc(void)
 {
 	Jabra::instance()->cbFirstScanForDevicesDone();
@@ -40,7 +40,7 @@ static void gLogDeviceEvent(unsigned short deviceID, char* eventStr)
 {
 	Jabra::instance()->cbLogDeviceEvent(deviceID, eventStr);
 }
-
+*/
 // ----------------------------------------
 Jabra::Jabra()
 {
@@ -54,6 +54,7 @@ Jabra::~Jabra()
 // ----------------------------------------
 // SDK callbacks
 // ----------------------------------------
+/*
 void Jabra::cbDeviceAttached(Jabra_DeviceInfo deviceInfo)
 {
 	m_deviceInfo = deviceInfo;
@@ -99,7 +100,7 @@ void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
 
 	json_value_free(js);
 }
-
+*/
 
 
 // ----------------------------------------
@@ -134,13 +135,13 @@ bool Jabra::InitSdk()
 		Log("failed to initialize Jabra SDK!\r\n");
 		return false;
 	}
-
+	*/
 	return true;
 }
 
 
 bool Jabra::InitDevice()
-{
+{/*
 	bool ok;
 	Jabra_ReturnCode ret;
 	
@@ -174,20 +175,21 @@ bool Jabra::InitDevice()
 	ok = Jabra_IsDevLogEnabled(deviceId());
 	Log("Device Log Enabled=%d=%d\r\n", ok);
 	Jabra_RegisterDevLogCallback(gLogDeviceEvent);
-
+	*/
 	return true;
 }
 
 void Jabra::Exit(bool onHookOnExit)
-{
+{/*
 	if(onHookOnExit)
 		OffHook(false);
 	Jabra_Uninitialize();
+	*/
 }
 
 
 bool Jabra::OffHook(std::optional<bool> optionalOnOff)
-{
+{/*
 	if(optionalOnOff.has_value()) {
 		if(m_OffHookState == optionalOnOff.value())
 			return m_OffHookState;
@@ -201,26 +203,29 @@ bool Jabra::OffHook(std::optional<bool> optionalOnOff)
 		Log("ERROR: SetOffHook failed with ret=%d\r\n", ret);
 
 	MainDialog::instance()->SetOffHookIcon(m_OffHookState);
+	*/
 	return m_OffHookState;
 }
 
 bool Jabra::Busy()
-{
+{/*
 	Jabra_ReturnCode ret = Jabra_SetBusylightStatus(deviceId(), !m_BusyLightState);
 	if(ret == Return_Ok)
 		m_BusyLightState = !m_BusyLightState;
 
 	MainDialog::instance()->SetBusyLightIcon(m_BusyLightState);
+	*/
 	return m_BusyLightState;
 }
 
 bool Jabra::Mute()
-{
+{/*
 	Jabra_ReturnCode ret = Jabra_SetMute(deviceId(), !m_MuteState);
 	if(ret == Return_Ok)
 		m_MuteState = !m_MuteState;
 
 	// icon is switched by the log event
 	//SetMuteIcon(m_MuteState);
+	*/
 	return m_MuteState;
 }
