@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\images">
+      <UniqueIdentifier>{8208669c-efae-4e5e-b65a-462150fee8c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OffHook.cpp">
@@ -39,17 +42,17 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="on.bmp">
-      <Filter>Resource Files</Filter>
+    <Image Include="images\off.bmp">
+      <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="off.bmp">
-      <Filter>Resource Files</Filter>
+    <Image Include="images\OffHook.bmp">
+      <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="OffHook.bmp">
-      <Filter>Resource Files</Filter>
+    <Image Include="images\on.bmp">
+      <Filter>Resource Files\images</Filter>
     </Image>
-    <Image Include="OnHook.bmp">
-      <Filter>Resource Files</Filter>
+    <Image Include="images\OnHook.bmp">
+      <Filter>Resource Files\images</Filter>
     </Image>
   </ItemGroup>
 </Project>

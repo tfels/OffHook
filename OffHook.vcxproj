@@ -159,10 +159,10 @@
     <ResourceCompile Include="OffHook.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="off.bmp" />
-    <Image Include="OffHook.bmp" />
-    <Image Include="on.bmp" />
-    <Image Include="OnHook.bmp" />
+    <Image Include="images\off.bmp" />
+    <Image Include="images\OffHook.bmp" />
+    <Image Include="images\on.bmp" />
+    <Image Include="images\OnHook.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
