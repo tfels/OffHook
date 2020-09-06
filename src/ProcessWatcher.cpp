@@ -123,6 +123,7 @@ bool ProcessWatcher::NotifyStartOfProcess(const char *processName)
 	pUnsecApp->CreateObjectStub(pSink, &pStubUnk);
 	pStubUnk->QueryInterface(IID_IWbemObjectSink, (void**)&pStubSink);
 
+	// register for process start events
 	std::ostringstream query("SELECT * "
 		"FROM __InstanceCreationEvent WITHIN 1 "
 		"WHERE TargetInstance ISA 'Win32_Process'",
@@ -130,18 +131,36 @@ bool ProcessWatcher::NotifyStartOfProcess(const char *processName)
 	if(processName)
 		query << " AND TargetInstance.Name = '" << processName << "'";
 
-	// The ExecNotificationQueryAsync method will call
-	// the WmiEventQuery::Indicate method when an event occurs
+	// The ExecNotificationQueryAsync method will call the WmiEventQuery::Indicate method when an event occurs
 	hres = pSvc->ExecNotificationQueryAsync(
 		_bstr_t("WQL"),
 		_bstr_t(query.str().c_str()),
 		WBEM_FLAG_SEND_STATUS,
 		NULL,
 		pStubSink);
-
-	if (FAILED(hres))
+	if(FAILED(hres))
 	{
-		Log("ExecNotificationQueryAsync failed with = 0x%X\n", hres);
+		Log("ExecNotificationQueryAsync (__InstanceCreationEvent) failed with = 0x%X\n", hres);
+		Exit();
+		return false;
+	}
+
+	// register for process stop events
+	query.str("SELECT * "
+		"FROM __InstanceDeletionEvent WITHIN 1 "
+		"WHERE TargetInstance ISA 'Win32_Process'");
+	if(processName)
+		query << " AND TargetInstance.Name = '" << processName << "'";
+
+	hres = pSvc->ExecNotificationQueryAsync(
+		_bstr_t("WQL"),
+		_bstr_t(query.str().c_str()),
+		WBEM_FLAG_SEND_STATUS,
+		NULL,
+		pStubSink);
+	if(FAILED(hres))
+	{
+		Log("ExecNotificationQueryAsync (__InstanceDeletionEvent) failed with = 0x%X\n", hres);
 		Exit();
 		return false;
 	}

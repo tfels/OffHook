@@ -36,9 +36,16 @@ HRESULT WmiEventSink::Indicate(long lObjectCount, IWbemClassObject** apObjArray)
 
 	for (int i = 0; i < lObjectCount; i++)
 	{
-		Log("Event occurred\r\n");
+		Log("Event occurred ... ");
 
-		//logClassName(apObjArray[i]);
+		if(apObjArray[i]->InheritsFrom(L"__InstanceCreationEvent") == WBEM_S_NO_ERROR)
+			Log("create\r\n");
+		else if(apObjArray[i]->InheritsFrom(L"__InstanceDeletionEvent") == WBEM_S_NO_ERROR)
+			Log("delete\r\n");
+		else {
+			Log("unknown\r\n");
+			logClassName(apObjArray[i]);
+		}
 
 		// get Win32_Process object
 		VARIANT proc;
@@ -110,7 +117,7 @@ void WmiEventSink::logClassName(IWbemClassObject* wmiObject)
 	HRESULT hr;
 	hr = wmiObject->Get(L"__CLASS", 0, &v, 0, 0);
 	if(SUCCEEDED(hr) && (V_VT(&v) == VT_BSTR))
-		Log("The class name is %ls\r\n", V_BSTR(&v));
+		Log("The class name is '%ls'\r\n", V_BSTR(&v));
 	else
 		Log("Error in getting specified object\r\n");
 	VariantClear(&v);
