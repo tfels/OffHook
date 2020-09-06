@@ -42,13 +42,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="images\off.bmp">
-      <Filter>Resource Files\images</Filter>
-    </Image>
     <Image Include="images\OffHook.bmp">
-      <Filter>Resource Files\images</Filter>
-    </Image>
-    <Image Include="images\on.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
     <Image Include="images\OnHook.bmp">
@@ -58,6 +52,12 @@
       <Filter>Resource Files\images</Filter>
     </Image>
     <Image Include="images\mic_on.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="images\busy_on.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="images\busy_off.bmp">
       <Filter>Resource Files\images</Filter>
     </Image>
   </ItemGroup>

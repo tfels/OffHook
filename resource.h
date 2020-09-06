@@ -3,8 +3,8 @@
 // Used by OffHook.rc
 //
 #define IDD_MAIN                        101
-#define IDB_ON                          102
-#define IDB_OFF                         103
+#define IDB_BUSY_ON                     102
+#define IDB_BUSY_OFF                    103
 #define IDB_OFFHOOK                     104
 #define IDB_ONHOOK                      105
 #define IDB_MIC_ON                      106

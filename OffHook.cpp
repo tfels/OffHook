@@ -120,7 +120,7 @@ void SetOffHookIcon(bool state)
 
 void SetBusyLightIcon(bool state)
 {
-	_setButtonImage(IDC_BUSYLIGHT, state ? IDB_ON : IDB_OFF);
+	_setButtonImage(IDC_BUSYLIGHT, state ? IDB_BUSY_ON : IDB_BUSY_OFF);
 }
 
 void SetMuteIcon(bool state)

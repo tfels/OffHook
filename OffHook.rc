@@ -100,9 +100,9 @@ END
 // Bitmap
 //
 
-IDB_OFF                 BITMAP                  "images\\off.bmp"
+IDB_BUSY_OFF            BITMAP                  "images\\busy_off.bmp"
 
-IDB_ON                  BITMAP                  "images\\on.bmp"
+IDB_BUSY_ON             BITMAP                  "images\\busy_on.bmp"
 
 IDB_OFFHOOK             BITMAP                  "images\\OffHook.bmp"
 
