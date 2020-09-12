@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Common.h>
+#include <optional>
 #include "Singleton.h"
 
 class Jabra :public Singleton<Jabra>
@@ -10,7 +11,7 @@ public:
 	bool InitSdk();
 	bool InitDevice();
 	void Exit(bool onHookOnExit = true);
-	bool OffHook();
+	bool OffHook(std::optional<bool> optionalOnOff = std::nullopt);
 	bool Busy();
 	bool Mute();
 

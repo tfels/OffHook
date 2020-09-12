@@ -180,19 +180,24 @@ bool Jabra::InitDevice()
 
 void Jabra::Exit(bool onHookOnExit)
 {
-	if(onHookOnExit && m_OffHookState)
-		OffHook();
+	if(onHookOnExit)
+		OffHook(false);
 	Jabra_Uninitialize();
 }
 
 
-bool Jabra::OffHook()
+bool Jabra::OffHook(std::optional<bool> optionalOnOff)
 {
+	if(optionalOnOff.has_value()) {
+		if(m_OffHookState == optionalOnOff.value())
+			return m_OffHookState;
+	}
+
 	Jabra_ReturnCode ret = Jabra_SetOffHook(deviceId(), !m_OffHookState);
 	if(ret == Return_Ok) {
 		m_OffHookState = !m_OffHookState;
 		cbBusylightFunc(m_deviceInfo.deviceID, m_OffHookState);
-	}  else
+	} else
 		Log("ERROR: SetOffHook failed with ret=%d\r\n", ret);
 
 	MainDialog::instance()->SetOffHookIcon(m_OffHookState);
