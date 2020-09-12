@@ -104,11 +104,13 @@ bool ProcessWatcher::Init()
 	return true;
 }
 
-bool ProcessWatcher::NotifyStartOfProcess(const char *processName)
+bool ProcessWatcher::NotifyStartOfProcess(const char *processName, ProcessWatcher_NotifyInterface *notifyCallback)
 {
 	HRESULT hres;
 	StopNotify();
 	Log("Registering notifier for start of process '%s'\r\n", processName);
+
+	m_notifyCallback = notifyCallback;
 
 	// Receive event notifications -----------------------------
 
@@ -117,7 +119,7 @@ bool ProcessWatcher::NotifyStartOfProcess(const char *processName)
 		CLSCTX_LOCAL_SERVER, IID_IUnsecuredApartment,
 		(void**)&pUnsecApp);
 
-	pSink = new WmiEventSink();
+	pSink = new WmiEventSink(notifyCallback);
 	pSink->AddRef();
 
 	pUnsecApp->CreateObjectStub(pSink, &pStubUnk);
@@ -174,6 +176,8 @@ bool ProcessWatcher::NotifyStartOfProcess(const char *processName)
 void ProcessWatcher::StopNotify()
 {
 	ULONG refCnt;
+
+	m_notifyCallback = nullptr;
 
 	if(m_running) {
 		HRESULT hres = pSvc->CancelAsyncCall(pStubSink);

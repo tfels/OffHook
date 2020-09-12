@@ -171,6 +171,7 @@ void MainDialog::removeTrayIcon()
 }
 
 //----------------------------------------------------------------------
+// Process Watcher
 //----------------------------------------------------------------------
 void MainDialog::configureProcessWatcher()
 {
@@ -180,11 +181,24 @@ void MainDialog::configureProcessWatcher()
 	}
 
 	if(m_settings.AutoOffHookProcess.empty() || m_settings.AutoOffHookProcess == "*")
-		ProcessWatcher::instance()->NotifyStartOfProcess(nullptr);
+		ProcessWatcher::instance()->NotifyStartOfProcess(nullptr, this);
 	else
-		ProcessWatcher::instance()->NotifyStartOfProcess(m_settings.AutoOffHookProcess);
+		ProcessWatcher::instance()->NotifyStartOfProcess(m_settings.AutoOffHookProcess.c_str(), this);
 }
 
+void MainDialog::ProcessStarted(std::string name)
+{
+	Jabra::instance()->OffHook(true);
+}
+
+void MainDialog::ProcessStopped(std::string name)
+{
+	Jabra::instance()->OffHook(false);
+}
+
+
+//----------------------------------------------------------------------
+// generic functions
 //----------------------------------------------------------------------
 void MainDialog::readSettings()
 {

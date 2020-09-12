@@ -38,11 +38,11 @@ HRESULT WmiEventSink::Indicate(long lObjectCount, IWbemClassObject** apObjArray)
 	{
 		Log("Event occurred ... ");
 
-		if(apObjArray[i]->InheritsFrom(L"__InstanceCreationEvent") == WBEM_S_NO_ERROR)
-			Log("create\r\n");
-		else if(apObjArray[i]->InheritsFrom(L"__InstanceDeletionEvent") == WBEM_S_NO_ERROR)
-			Log("delete\r\n");
-		else {
+		if(apObjArray[i]->InheritsFrom(L"__InstanceCreationEvent") == WBEM_S_NO_ERROR) {
+			Log("create ");
+		} else if(apObjArray[i]->InheritsFrom(L"__InstanceDeletionEvent") == WBEM_S_NO_ERROR) {
+			Log("delete ");
+		} else {
 			Log("unknown\r\n");
 			logClassName(apObjArray[i]);
 		}
@@ -64,14 +64,22 @@ HRESULT WmiEventSink::Indicate(long lObjectCount, IWbemClassObject** apObjArray)
 
 		// get name
 		std::string name = getStringProperty(processObject, "Name");
-		Log("Name: %s\r\n", name.c_str());
+		Log("\"%s\"\r\n", name.c_str());
 		if(name.empty())
 			return WBEM_E_FAILED;
-
+		/*
 		name = getStringProperty(processObject, "ExecutablePath");
 		Log("ExecutablePath: %s\r\n", name.c_str());
 		if(name.empty())
 			return WBEM_E_FAILED;
+		*/
+
+		if(m_notifyCallback) {
+			if(apObjArray[i]->InheritsFrom(L"__InstanceCreationEvent") == WBEM_S_NO_ERROR)
+				m_notifyCallback->ProcessStarted(name);
+			else if(apObjArray[i]->InheritsFrom(L"__InstanceDeletionEvent") == WBEM_S_NO_ERROR)
+				m_notifyCallback->ProcessStopped(name);
+		}
 	}
 
 	return WBEM_S_NO_ERROR;

@@ -3,14 +3,20 @@
 #include "Singleton.h"
 #include "WmiEventSink.h"
 
+class ProcessWatcher_NotifyInterface
+{
+public:
+	virtual void ProcessStarted(std::string name) = 0;
+	virtual void ProcessStopped(std::string name) = 0;
+};
+
 class ProcessWatcher :public Singleton<ProcessWatcher>
 {
 	friend class Singleton<ProcessWatcher>;
 
 public:
 	bool Init();
-	bool NotifyStartOfProcess(const std::string processName) { return NotifyStartOfProcess(processName.c_str());  };
-	bool NotifyStartOfProcess(const char* processName);
+	bool NotifyStartOfProcess(const char* processName, ProcessWatcher_NotifyInterface* notifyCallback);
 	void StopNotify();
 	void Exit();
 
@@ -20,6 +26,8 @@ private: // constructors
 
 private:
 	bool m_running = false;
+
+	ProcessWatcher_NotifyInterface* m_notifyCallback = nullptr;
 
 	IWbemLocator* pLoc = nullptr;
 	IWbemServices* pSvc = nullptr;

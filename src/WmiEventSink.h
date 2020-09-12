@@ -5,13 +5,17 @@
 #include <wbemidl.h>
 #include <string>
 
+class ProcessWatcher_NotifyInterface; 
+
 class WmiEventSink : public IWbemObjectSink
 {
 	LONG m_lRef;
 	bool bDone;
 
 public:
-	WmiEventSink() { m_lRef = 0; }
+	WmiEventSink(ProcessWatcher_NotifyInterface* notifyCallback) :
+		m_notifyCallback(notifyCallback)
+	{ m_lRef = 0; }
 	~WmiEventSink() { bDone = true; }
 
 	virtual ULONG STDMETHODCALLTYPE AddRef();
@@ -34,4 +38,7 @@ public:
 private:
 	void logClassName(IWbemClassObject* wmiObject);
 	std::string getStringProperty(IWbemClassObject* wmiObject, const char* propertyName);
+
+private:
+	ProcessWatcher_NotifyInterface* m_notifyCallback = nullptr;
 };
