@@ -26,6 +26,7 @@ private:
 	void _setButtonImage(int controlId, int imageId);
 	void addTrayIcon(HWND hWnd);
 	void removeTrayIcon();
+	void configureProcessWatcher();
 	void readSettings();
 
 private:

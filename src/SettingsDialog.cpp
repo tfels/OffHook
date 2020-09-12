@@ -39,6 +39,13 @@ INT_PTR CALLBACK SettingsDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
+		case IDC_AUTO_OFFHOOK:
+			if(HIWORD(wParam) == BN_CLICKED) {
+				LRESULT res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK, BM_GETCHECK, 0, 0);
+				EnableWindow(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS), res == BST_CHECKED ? true : false);
+			}
+			break;
+
 		case IDC_ONHOOK_EXIT:
 			break;
 
@@ -58,15 +65,20 @@ INT_PTR CALLBACK SettingsDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 
 bool SettingsDialog::ReadSettings(HWND hDlg)
 {
-	union {
-		bool b;
-	} val;
+	bool boolVal;
+	std::string strVal;
 
-	val.b = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
-	SendDlgItemMessage(hDlg, IDC_ONHOOK_EXIT, BM_SETCHECK, val.b == true ? BST_CHECKED : BST_UNCHECKED, 0);
+	boolVal = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	SendDlgItemMessage(hDlg, IDC_ONHOOK_EXIT, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
 
-	val.b = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
-	SendDlgItemMessage(hDlg, IDC_MINIMIZE_TO_TRAY, BM_SETCHECK, val.b == true ? BST_CHECKED : BST_UNCHECKED, 0);
+	boolVal = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
+	SendDlgItemMessage(hDlg, IDC_MINIMIZE_TO_TRAY, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
+
+	boolVal = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
+	SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
+	SendMessage(hDlg, WM_COMMAND, MAKEWPARAM(IDC_AUTO_OFFHOOK, BN_CLICKED), 0);
+	strVal = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
+	SetWindowText(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS), strVal.c_str());
 
 	return true;
 }
@@ -74,6 +86,8 @@ bool SettingsDialog::ReadSettings(HWND hDlg)
 bool SettingsDialog::SaveSettings(HWND hDlg)
 {
 	bool ret = true;
+	int textLen;
+	std::string text;
 	LRESULT res;
 
 	res = SendDlgItemMessage(hDlg, IDC_ONHOOK_EXIT, BM_GETCHECK, 0, 0);
@@ -81,6 +95,14 @@ bool SettingsDialog::SaveSettings(HWND hDlg)
 
 	res = SendDlgItemMessage(hDlg, IDC_MINIMIZE_TO_TRAY, BM_GETCHECK, 0, 0);
 	ret &= m_config.SaveBool(SETTINGS_MINIMIZE_TO_TRAY, res == BST_CHECKED ? true : false);
+
+	res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK, BM_GETCHECK, 0, 0);
+	ret &= m_config.SaveBool(SETTINGS_AUTO_OFFHOOK, res == BST_CHECKED ? true : false);
+	textLen = GetWindowTextLength(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS));
+	textLen++; // add space for a closing \0
+	text.resize(textLen, '\0');
+	GetWindowText(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS), &text[0], textLen);
+	ret &= m_config.SaveString(SETTINGS_AUTO_OFFHOOK_PROCESS, text.c_str());
 
 	return ret;
 }

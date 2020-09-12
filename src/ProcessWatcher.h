@@ -9,6 +9,7 @@ class ProcessWatcher :public Singleton<ProcessWatcher>
 
 public:
 	bool Init();
+	bool NotifyStartOfProcess(const std::string processName) { return NotifyStartOfProcess(processName.c_str());  };
 	bool NotifyStartOfProcess(const char* processName);
 	void StopNotify();
 	void Exit();

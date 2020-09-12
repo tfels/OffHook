@@ -82,14 +82,12 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		break;
 
 	case WM_COMMAND:
-		switch (LOWORD(wParam))
+		switch(LOWORD(wParam))
 		{
 		case IDC_INIT:
 			Jabra::instance()->InitSdk();
 			ProcessWatcher::instance()->Init();
-			ProcessWatcher::instance()->NotifyStartOfProcess(nullptr);
-			//ProcessWatcher::instance()->NotifyStartOfProcess("notepad.exe");
-			//ProcessWatcher::instance()->NotifyStartOfProcess("g2mvideoconference.exe");
+			configureProcessWatcher();
 			break;
 		case IDC_BUSYLIGHT:
 			Jabra::instance()->Busy();
@@ -105,6 +103,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 			SettingsDialog dlg;
 			if(dlg.RunModal(g_hInstance, hDlg) == IDOK) {
 				readSettings();
+				configureProcessWatcher();
 			}
 		}
 		break;
@@ -172,13 +171,30 @@ void MainDialog::removeTrayIcon()
 }
 
 //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+void MainDialog::configureProcessWatcher()
+{
+	if(!m_settings.AutoOffHook) {
+		ProcessWatcher::instance()->StopNotify();
+		return;
+	}
+
+	if(m_settings.AutoOffHookProcess.empty() || m_settings.AutoOffHookProcess == "*")
+		ProcessWatcher::instance()->NotifyStartOfProcess(nullptr);
+	else
+		ProcessWatcher::instance()->NotifyStartOfProcess(m_settings.AutoOffHookProcess);
+}
+
+//----------------------------------------------------------------------
 void MainDialog::readSettings()
 {
 	Settings m_config;
 	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
 
-	m_settings.OnHookOnExit   = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
-	m_settings.MinimizeToTray = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
+	m_settings.OnHookOnExit = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	m_settings.MinimizeToTray     = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
+	m_settings.AutoOffHook        = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
+	m_settings.AutoOffHookProcess = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
 
 	m_config.Exit();
 }

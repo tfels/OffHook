@@ -17,6 +17,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
 LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,9 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,254,156,50,14
     CONTROL         "OnHook on Exit",IDC_ONHOOK_EXIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,64,10
     CONTROL         "Minimize to Tray Icon",IDC_MINIMIZE_TO_TRAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,20,83,10
+    CONTROL         "Auto OffHook while process is running",IDC_AUTO_OFFHOOK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,38,137,10
+    EDITTEXT        IDC_AUTO_OFFHOOK_PROCESS,149,36,155,14,ES_AUTOHSCROLL
 END
 
 IDD_MAIN DIALOGEX 0, 0, 309, 176
