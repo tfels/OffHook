@@ -8,10 +8,12 @@
 #define SETTINGS_AUTO_OFFHOOK          "AutoOffHook"   // default: true
 #define SETTINGS_AUTO_OFFHOOK_PROCESS  "AutoOffHookProcess"
 #define SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS  "g2mvideoconference.exe"
+#define SETTINGS_AUTO_OFFHOOK_BALLOON  "AutoOffHookBalloonTip"   // default: true
 
 struct OffHookSettings {
 	bool OnHookOnExit;
 	bool MinimizeToTray;
 	bool AutoOffHook;
 	std::string AutoOffHookProcess;
+	bool AutoOffHookBalloon;
 };

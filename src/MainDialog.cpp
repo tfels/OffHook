@@ -185,6 +185,7 @@ void MainDialog::configureProcessWatcher()
 {
 	if(!m_settings.AutoOffHook) {
 		ProcessWatcher::instance()->StopNotify();
+		showBallontip("");
 		return;
 	}
 
@@ -192,17 +193,22 @@ void MainDialog::configureProcessWatcher()
 		ProcessWatcher::instance()->NotifyStartOfProcess(nullptr, this);
 	else
 		ProcessWatcher::instance()->NotifyStartOfProcess(m_settings.AutoOffHookProcess.c_str(), this);
+
+	if(!m_settings.AutoOffHookBalloon)
+		showBallontip("");
 }
 
 void MainDialog::ProcessStarted(std::string name)
 {
-	showBallontip("Setting off hook mode due to process start");
+	if(m_settings.AutoOffHookBalloon)
+		showBallontip("Setting off hook mode due to process start");
 	Jabra::instance()->OffHook(true);
 }
 
 void MainDialog::ProcessStopped(std::string name)
 {
-	showBallontip("Resetting to on hook due to process stop");
+	if(m_settings.AutoOffHookBalloon)
+		showBallontip("Resetting to on hook due to process stop");
 	Jabra::instance()->OffHook(false);
 }
 
@@ -215,10 +221,11 @@ void MainDialog::readSettings()
 	Settings m_config;
 	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
 
-	m_settings.OnHookOnExit = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	m_settings.OnHookOnExit       = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
 	m_settings.MinimizeToTray     = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
 	m_settings.AutoOffHook        = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
 	m_settings.AutoOffHookProcess = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
+	m_settings.AutoOffHookBalloon = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
 
 	m_config.Exit();
 }

@@ -43,6 +43,7 @@ INT_PTR CALLBACK SettingsDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 			if(HIWORD(wParam) == BN_CLICKED) {
 				LRESULT res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK, BM_GETCHECK, 0, 0);
 				EnableWindow(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS), res == BST_CHECKED ? true : false);
+				EnableWindow(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_BALLOON), res == BST_CHECKED ? true : false);
 			}
 			break;
 
@@ -74,11 +75,16 @@ bool SettingsDialog::ReadSettings(HWND hDlg)
 	boolVal = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
 	SendDlgItemMessage(hDlg, IDC_MINIMIZE_TO_TRAY, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
 
+	// Auto OffHook Settings
 	boolVal = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
 	SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
 	SendMessage(hDlg, WM_COMMAND, MAKEWPARAM(IDC_AUTO_OFFHOOK, BN_CLICKED), 0);
+
 	strVal = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
 	SetWindowText(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS), strVal.c_str());
+
+	boolVal = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
+	SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_BALLOON, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
 
 	return true;
 }
@@ -96,13 +102,18 @@ bool SettingsDialog::SaveSettings(HWND hDlg)
 	res = SendDlgItemMessage(hDlg, IDC_MINIMIZE_TO_TRAY, BM_GETCHECK, 0, 0);
 	ret &= m_config.SaveBool(SETTINGS_MINIMIZE_TO_TRAY, res == BST_CHECKED ? true : false);
 
+	// Auto OffHook Settings
 	res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK, BM_GETCHECK, 0, 0);
 	ret &= m_config.SaveBool(SETTINGS_AUTO_OFFHOOK, res == BST_CHECKED ? true : false);
+
 	textLen = GetWindowTextLength(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS));
 	textLen++; // add space for a closing \0
 	text.resize(textLen, '\0');
 	GetWindowText(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS), &text[0], textLen);
 	ret &= m_config.SaveString(SETTINGS_AUTO_OFFHOOK_PROCESS, text.c_str());
+
+	res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_BALLOON, BM_GETCHECK, 0, 0);
+	ret &= m_config.SaveBool(SETTINGS_AUTO_OFFHOOK_BALLOON, res == BST_CHECKED ? true : false);
 
 	return ret;
 }
