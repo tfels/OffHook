@@ -152,22 +152,30 @@ void MainDialog::SetMuteIcon(bool state)
 //----------------------------------------------------------------------
 // tray icon handling
 //----------------------------------------------------------------------
-static NOTIFYICONDATA g_niData = {0};
-
 void MainDialog::addTrayIcon(HWND hWnd)
 {
-	ZeroMemory(&g_niData, sizeof(g_niData));
-	g_niData.cbSize = sizeof(NOTIFYICONDATA);
-	g_niData.hWnd = hWnd;
-	g_niData.uID = ID_TRAY_ICON;
-	g_niData.uFlags = NIF_ICON | NIF_MESSAGE;
-	g_niData.hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
-	g_niData.uCallbackMessage = WM_TRAY_ICON;
-	BOOL ret = Shell_NotifyIcon(NIM_ADD, &g_niData);
+	ZeroMemory(&m_niData, sizeof(m_niData));
+	m_niData.cbSize = sizeof(NOTIFYICONDATA);
+	m_niData.hWnd = hWnd;
+	m_niData.uID = ID_TRAY_ICON;
+	m_niData.uFlags = NIF_ICON | NIF_MESSAGE;
+	m_niData.hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
+	m_niData.uCallbackMessage = WM_TRAY_ICON;
+	BOOL ret = Shell_NotifyIcon(NIM_ADD, &m_niData);
 }
 void MainDialog::removeTrayIcon()
 {
-	BOOL ret = Shell_NotifyIcon(NIM_DELETE, &g_niData);
+	BOOL ret = Shell_NotifyIcon(NIM_DELETE, &m_niData);
+}
+
+void MainDialog::showBallontip(const char *text)
+{
+	strcpy_s(m_niData.szInfoTitle, "OffHook");
+	strcpy_s(m_niData.szInfo, text);
+	m_niData.uTimeout = 5 * 1000;
+	m_niData.dwInfoFlags = NIIF_INFO;
+	m_niData.uFlags |= NIF_INFO;
+	BOOL ret = Shell_NotifyIcon(NIM_MODIFY, &m_niData);
 }
 
 //----------------------------------------------------------------------
@@ -188,11 +196,13 @@ void MainDialog::configureProcessWatcher()
 
 void MainDialog::ProcessStarted(std::string name)
 {
+	showBallontip("Setting off hook mode due to process start");
 	Jabra::instance()->OffHook(true);
 }
 
 void MainDialog::ProcessStopped(std::string name)
 {
+	showBallontip("Resetting to on hook due to process stop");
 	Jabra::instance()->OffHook(false);
 }
 

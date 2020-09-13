@@ -1,5 +1,7 @@
 #pragma once
 
+#include <shellapi.h>
+
 #include "Singleton.h"
 #include "Settings.h"
 #include "OffHookSettings.h"
@@ -30,9 +32,11 @@ private:
 	void _setButtonImage(int controlId, int imageId);
 	void addTrayIcon(HWND hWnd);
 	void removeTrayIcon();
+	void showBallontip(const char* text);
 	void configureProcessWatcher();
 	void readSettings();
 
 private:
+	NOTIFYICONDATA m_niData;
 	struct OffHookSettings m_settings;
 };
