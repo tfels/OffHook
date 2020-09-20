@@ -33,6 +33,8 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		DestroyIcon(hIcon);
 		}
 		readSettings();
+		if(m_settings.TrayIcon)
+			addTrayIcon(hDlg);
 
 		ret = SetTimer(hDlg, IDC_INIT, 100, nullptr);
 		return (INT_PTR)TRUE;
@@ -62,11 +64,13 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		if(m_settings.MinimizeToTray) {
 			static LONG s_prevExState;
 			if(wParam == SIZE_MINIMIZED) {
-				addTrayIcon(hDlg);
+				if(!m_settings.TrayIcon) // tray icon not present --> add
+					addTrayIcon(hDlg);
 				s_prevExState = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
 			} else if(wParam == SIZE_RESTORED) {
 				SetWindowLong(hDlg, GWL_EXSTYLE, s_prevExState);
-				removeTrayIcon();
+				if(!m_settings.TrayIcon)
+					removeTrayIcon();
 			}
 		}
 		break;
@@ -103,6 +107,12 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 			SettingsDialog dlg;
 			if(dlg.RunModal(g_hInstance, hDlg) == IDOK) {
 				readSettings();
+				// apply settings
+				if(m_settings.TrayIcon)
+					addTrayIcon(hDlg);
+				else
+					removeTrayIcon();
+
 				configureProcessWatcher();
 			}
 		}
@@ -222,6 +232,7 @@ void MainDialog::readSettings()
 	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
 
 	m_settings.OnHookOnExit       = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	m_settings.TrayIcon           = m_config.ReadBool(SETTINGS_TRAY_ICON, true);
 	m_settings.MinimizeToTray     = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
 	m_settings.AutoOffHook        = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
 	m_settings.AutoOffHookProcess = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
