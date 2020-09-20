@@ -20,7 +20,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
-	
+
+	//*************************************************************
+	//* cmd line processing
+	//*************************************************************
+	int argc = 0;
+	LPWSTR* wargv = CommandLineToArgvW(lpCmdLine, &argc);
+	for(int i = 0; i < argc; i++) {
+		if(wcscmp(wargv[i], L"-minimized") == 0)
+			nCmdShow = SW_MINIMIZE;
+	}
+	LocalFree(wargv);
+
+	//*************************************************************
+	//* start GUI
+	//*************************************************************
 	g_hInstance = hInstance;
 
 	g_hMainDlg = CreateDialogParam(hInstance, MAKEINTRESOURCE(IDD_MAIN), 0, DialogProc, 0);
