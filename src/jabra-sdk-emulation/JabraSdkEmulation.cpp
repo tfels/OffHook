@@ -2,10 +2,14 @@
 #include <windows.h>
 #include <stdio.h>
 
+#include <sstream>
+#include <thread>
+
 #include <Common.h>
 #include <JabraNativeHid.h>
 
 static const unsigned short g_myDeviceId = 1;
+static void triggerLogDeviceEvent();
 
 //*************************************************************
 //* stuff fromm Common.h
@@ -58,9 +62,11 @@ void Jabra_RegisterBusylightEvent(void(*BusylightFunc)(unsigned short deviceID, 
 
 
 // device log
+static void(*g_LogDeviceEventCallback)(unsigned short deviceID, char* eventStr) = nullptr;
 Jabra_ReturnCode Jabra_EnableDevLog(unsigned short, bool) { return Return_Ok; };
 bool Jabra_IsDevLogEnabled(unsigned short) { return true; }
-void Jabra_RegisterDevLogCallback(void(*)(unsigned short, char*)) {}
+void Jabra_RegisterDevLogCallback(void(*LogDeviceEvent)(unsigned short deviceID, char* eventStr))
+{ g_LogDeviceEventCallback = LogDeviceEvent; }
 
 
 //*************************************************************
@@ -73,9 +79,50 @@ bool Jabra_IsOffHookSupported(unsigned short) { return true; }
 Jabra_ReturnCode Jabra_SetOffHook(unsigned short, bool offHook)
 {
 	g_offHook = offHook;
+	if(!g_offHook)
+		Jabra_SetMute(g_myDeviceId, false);
 	return Return_Ok;
 }
 
 // mute
+static bool g_mute = false;
 bool Jabra_IsMuteSupported(unsigned short) { return true; }
-Jabra_ReturnCode Jabra_SetMute(unsigned short, bool) { return Return_Ok; }
+Jabra_ReturnCode Jabra_SetMute(unsigned short, bool mute)
+{ 
+	g_mute = mute;
+	triggerLogDeviceEvent();
+
+	return Return_Ok;
+}
+
+
+//*************************************************************
+//* internal functions
+//*************************************************************
+// device log event (threaded)
+static void delayedDeviceEvent();
+static void logDeviceEvent();
+
+static void triggerLogDeviceEvent()
+{
+	std::thread eventTread(delayedDeviceEvent);
+	eventTread.detach();
+}
+
+static void delayedDeviceEvent()
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	logDeviceEvent();
+}
+
+static void logDeviceEvent()
+{
+	if(!g_LogDeviceEventCallback)
+		return;
+
+	std::ostringstream eventStr;
+	eventStr << "{" << std::endl;
+	eventStr << "   \"Mute State\" : \"" << (g_mute ? "TRUE" : "FALSE") << "\"" << std::endl;
+	eventStr << "}" << std::endl;
+	g_LogDeviceEventCallback(g_myDeviceId, (char*)eventStr.str().c_str());
+}
