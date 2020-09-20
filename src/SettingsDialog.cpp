@@ -50,6 +50,13 @@ INT_PTR CALLBACK SettingsDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 		case IDC_ONHOOK_EXIT:
 			break;
 
+		case ID_CLEANUP_REGISTRY:
+			if(IDYES != MessageBox(hDlg, "All settings will be deleted in the registry!\r\nContinue?", "OffHook - Clear Settings", MB_YESNO | MB_ICONWARNING))
+				break;
+			m_config.DeleteKey();
+			SendMessage(hDlg, WM_CLOSE, 0, 0);
+			break;
+
 		case IDOK:
 			SaveSettings(hDlg);
 			// fallthrough

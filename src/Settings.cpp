@@ -18,16 +18,16 @@ Settings::~Settings()
 // ----------------------------------------
 bool Settings::Init(const char *vendorName, const char* appName)
 {
-	std::string regPath = "Software\\";
+	m_regKeyName = "Software\\";
 	if(vendorName) {
-		regPath += vendorName;
-		regPath += '\\';
+		m_regKeyName += vendorName;
+		m_regKeyName += '\\';
 	}
 	if(!appName)
 		return false;
-	regPath += appName;
+	m_regKeyName += appName;
 
-	LSTATUS err = RegCreateKeyEx(HKEY_CURRENT_USER, regPath.c_str(),
+	LSTATUS err = RegCreateKeyEx(HKEY_CURRENT_USER, m_regKeyName.c_str(),
 		0, NULL,
 		0, KEY_READ | KEY_SET_VALUE | KEY_WOW64_64KEY, NULL,
 		&m_hKey, NULL);
@@ -40,6 +40,11 @@ void Settings::Exit()
 		return;
 	RegCloseKey(m_hKey);
 	m_hKey = nullptr;
+}
+
+bool Settings::DeleteKey()
+{
+	return (RegDeleteKey(HKEY_CURRENT_USER, m_regKeyName.c_str()) == ERROR_SUCCESS);
 }
 
 
