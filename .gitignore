@@ -1,6 +1,5 @@
 /prj/.vs/
-/prj/Debug/
-/prj/Release/
+/prj/Win32/
 /prj/x64/
 /prj/*.vcxproj.user
 
