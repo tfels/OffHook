@@ -24,11 +24,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//*************************************************************
 	//* cmd line processing
 	//*************************************************************
+	TStartupOptions startOptions = { 0 };
+
 	int argc = 0;
 	LPWSTR* wargv = CommandLineToArgvW(lpCmdLine, &argc);
 	for(int i = 0; i < argc; i++) {
 		if(wcscmp(wargv[i], L"-minimized") == 0)
-			nCmdShow = SW_MINIMIZE;
+			startOptions.startMinimized = true;
 	}
 	LocalFree(wargv);
 
@@ -37,9 +39,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//*************************************************************
 	g_hInstance = hInstance;
 
-	g_hMainDlg = CreateDialogParam(hInstance, MAKEINTRESOURCE(IDD_MAIN), 0, DialogProc, 0);
-	ShowWindow(g_hMainDlg, nCmdShow);
-
+	g_hMainDlg = CreateDialogParam(hInstance, MAKEINTRESOURCE(IDD_MAIN), 0, DialogProc, (LPARAM)&startOptions);
+	if(startOptions.startMinimized)
+		ShowWindow(g_hMainDlg, SW_MINIMIZE);
+	else
+		ShowWindow(g_hMainDlg, nCmdShow);
 
 	// Main message loop:
 	BOOL ret;

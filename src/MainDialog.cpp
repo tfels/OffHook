@@ -27,6 +27,8 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 	{
 	case WM_INITDIALOG:
 		{
+		//TStartupOptions* startOptions = (TStartupOptions*)lParam;
+
 		HICON hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
 		SendMessageW(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 		SendMessageW(hDlg, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
