@@ -5,7 +5,14 @@
 #include "Jabra.h"
 #include "MainDialog.h"
 
-#pragma comment(lib, "libjabra.lib")
+//#define JABRA_SDK_EMULATION
+
+#ifdef JABRA_SDK_EMULATION
+	#pragma comment(lib, "JabraSdkEmulation.lib")
+#else
+	#pragma comment(lib, "libjabra.lib")
+#endif
+
 
 #define Log MainDialog::instance()->Log
 
