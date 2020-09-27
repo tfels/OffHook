@@ -30,7 +30,7 @@ private: // constructors
 
 private:
 	void _setButtonImage(int controlId, int imageId);
-	void addTrayIcon(HWND hWnd);
+	void addTrayIcon();
 	void removeTrayIcon();
 	void showBallontip(const char* text);
 	void configureProcessWatcher();
@@ -39,4 +39,8 @@ private:
 private:
 	NOTIFYICONDATA m_niData;
 	struct OffHookSettings m_settings;
+	HWND m_hWnd;
+	LONG m_prevGwlExStyle;
+	bool m_isMinimized = false;
+	bool m_autoRestoredFromMinimized = false;
 };

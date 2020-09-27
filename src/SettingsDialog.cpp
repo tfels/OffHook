@@ -44,6 +44,7 @@ INT_PTR CALLBACK SettingsDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 				LRESULT res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK, BM_GETCHECK, 0, 0);
 				EnableWindow(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_PROCESS), res == BST_CHECKED ? true : false);
 				EnableWindow(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_BALLOON), res == BST_CHECKED ? true : false);
+				EnableWindow(GetDlgItem(hDlg, IDC_AUTO_OFFHOOK_RESTORE_UI), res == BST_CHECKED ? true : false);
 			}
 			break;
 
@@ -97,6 +98,9 @@ bool SettingsDialog::ReadSettings(HWND hDlg)
 	boolVal = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
 	SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_BALLOON, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
 
+	boolVal = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_RESTORE_UI, true);
+	SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_RESTORE_UI, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
+
 	boolVal = GetSetAutoRunRegistry(std::nullopt);
 	SendDlgItemMessage(hDlg, IDC_AUTORUN, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
 
@@ -131,6 +135,9 @@ bool SettingsDialog::SaveSettings(HWND hDlg)
 
 	res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_BALLOON, BM_GETCHECK, 0, 0);
 	ret &= m_config.SaveBool(SETTINGS_AUTO_OFFHOOK_BALLOON, res == BST_CHECKED ? true : false);
+
+	res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_RESTORE_UI, BM_GETCHECK, 0, 0);
+	ret &= m_config.SaveBool(SETTINGS_AUTO_OFFHOOK_RESTORE_UI, res == BST_CHECKED ? true : false);
 
 	res = SendDlgItemMessage(hDlg, IDC_AUTORUN, BM_GETCHECK, 0, 0);
 	ret &= GetSetAutoRunRegistry(res == BST_CHECKED ? true : false);

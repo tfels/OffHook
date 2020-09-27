@@ -26,6 +26,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+		m_hWnd = hDlg;
 		{
 		HICON hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
 		SendMessageW(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
@@ -34,7 +35,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		}
 		readSettings();
 		if(m_settings.TrayIcon)
-			addTrayIcon(hDlg);
+			addTrayIcon();
 
 		ret = SetTimer(hDlg, IDC_INIT, 100, nullptr);
 		return (INT_PTR)TRUE;
@@ -62,15 +63,17 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 
 	case WM_SIZE:
 		if(m_settings.MinimizeToTray) {
-			static LONG s_prevExState;
 			if(wParam == SIZE_MINIMIZED) {
+				m_isMinimized = true;
+				m_autoRestoredFromMinimized = false;
 				if(!m_settings.TrayIcon) // tray icon not present --> add
-					addTrayIcon(hDlg);
-				s_prevExState = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
+					addTrayIcon();
+				m_prevGwlExStyle = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
 			} else if(wParam == SIZE_RESTORED) {
-				SetWindowLong(hDlg, GWL_EXSTYLE, s_prevExState);
+				SetWindowLong(hDlg, GWL_EXSTYLE, m_prevGwlExStyle);
 				if(!m_settings.TrayIcon)
 					removeTrayIcon();
+				m_isMinimized = false;
 			}
 		}
 		break;
@@ -109,7 +112,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 				readSettings();
 				// apply settings
 				if(m_settings.TrayIcon)
-					addTrayIcon(hDlg);
+					addTrayIcon();
 				else
 					removeTrayIcon();
 
@@ -162,11 +165,11 @@ void MainDialog::SetMuteIcon(bool state)
 //----------------------------------------------------------------------
 // tray icon handling
 //----------------------------------------------------------------------
-void MainDialog::addTrayIcon(HWND hWnd)
+void MainDialog::addTrayIcon()
 {
 	ZeroMemory(&m_niData, sizeof(m_niData));
 	m_niData.cbSize = sizeof(NOTIFYICONDATA);
-	m_niData.hWnd = hWnd;
+	m_niData.hWnd = m_hWnd;
 	m_niData.uID = ID_TRAY_ICON;
 	m_niData.uFlags = NIF_ICON | NIF_MESSAGE;
 	m_niData.hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
@@ -212,6 +215,11 @@ void MainDialog::ProcessStarted(std::string name)
 {
 	if(m_settings.AutoOffHookBalloon)
 		showBallontip("Setting off hook mode due to process start");
+	if(m_settings.AutoOffHookRestoreUi && m_isMinimized) {
+		m_autoRestoredFromMinimized = true;
+		ShowWindow(m_hWnd, SW_RESTORE);
+	}
+
 	Jabra::instance()->OffHook(true);
 }
 
@@ -219,6 +227,9 @@ void MainDialog::ProcessStopped(std::string name)
 {
 	if(m_settings.AutoOffHookBalloon)
 		showBallontip("Resetting to on hook due to process stop");
+	if(m_settings.AutoOffHookRestoreUi && m_autoRestoredFromMinimized)
+		ShowWindow(m_hWnd, SW_MINIMIZE);
+
 	Jabra::instance()->OffHook(false);
 }
 
@@ -231,12 +242,13 @@ void MainDialog::readSettings()
 	Settings m_config;
 	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
 
-	m_settings.OnHookOnExit       = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
-	m_settings.TrayIcon           = m_config.ReadBool(SETTINGS_TRAY_ICON, true);
-	m_settings.MinimizeToTray     = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
-	m_settings.AutoOffHook        = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
-	m_settings.AutoOffHookProcess = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
-	m_settings.AutoOffHookBalloon = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
+	m_settings.OnHookOnExit         = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	m_settings.TrayIcon             = m_config.ReadBool(SETTINGS_TRAY_ICON, true);
+	m_settings.MinimizeToTray       = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
+	m_settings.AutoOffHook          = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
+	m_settings.AutoOffHookProcess   = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
+	m_settings.AutoOffHookBalloon   = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
+	m_settings.AutoOffHookRestoreUi = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_RESTORE_UI, true);
 
 	m_config.Exit();
 }
