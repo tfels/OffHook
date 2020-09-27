@@ -63,13 +63,12 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 
 	case WM_SIZE:
 		if(m_settings.MinimizeToTray) {
-			static LONG s_prevExState;
 			if(wParam == SIZE_MINIMIZED) {
 				if(!m_settings.TrayIcon) // tray icon not present --> add
 					addTrayIcon();
-				s_prevExState = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
+				m_prevGwlExStyle = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
 			} else if(wParam == SIZE_RESTORED) {
-				SetWindowLong(hDlg, GWL_EXSTYLE, s_prevExState);
+				SetWindowLong(hDlg, GWL_EXSTYLE, m_prevGwlExStyle);
 				if(!m_settings.TrayIcon)
 					removeTrayIcon();
 			}

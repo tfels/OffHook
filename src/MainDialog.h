@@ -40,4 +40,5 @@ private:
 	NOTIFYICONDATA m_niData;
 	struct OffHookSettings m_settings;
 	HWND m_hWnd;
+	LONG m_prevGwlExStyle;
 };
