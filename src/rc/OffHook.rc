@@ -60,10 +60,10 @@ BEGIN
     CONTROL         "OnHook on Exit",IDC_ONHOOK_EXIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,64,10
     CONTROL         "Tray Icon",IDC_TRAY_ICON,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,21,46,10
     CONTROL         "Minimize to Tray Icon",IDC_MINIMIZE_TO_TRAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,35,83,10
-    CONTROL         "Auto OffHook while process is running",IDC_AUTO_OFFHOOK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,49,137,10
+    CONTROL         "Auto OffHook while process is running",IDC_AUTO_OFFHOOK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,49,137,10
     EDITTEXT        IDC_AUTO_OFFHOOK_PROCESS,149,47,155,14,ES_AUTOHSCROLL
     CONTROL         "Show Ballon Tip",IDC_AUTO_OFFHOOK_BALLOON,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,63,137,10
+    CONTROL         "Autostart (via ""Run"" registry setting)",IDC_AUTORUN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,77,137,10
     DEFPUSHBUTTON   "Cleanup Registry",ID_CLEANUP_REGISTRY,240,137,64,14
 END
 

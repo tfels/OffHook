@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "Settings.h"
 
 class SettingsDialog
@@ -17,6 +19,7 @@ private:
 
 	bool ReadSettings(HWND hDlg);
 	bool SaveSettings(HWND hDlg);
+	bool GetSetAutoRunRegistry(std::optional<bool> setValue); // pass std::nullopt for getting the current value
 private:
 	Settings m_config;
 };

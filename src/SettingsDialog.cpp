@@ -54,6 +54,7 @@ INT_PTR CALLBACK SettingsDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 			if(IDYES != MessageBox(hDlg, "All settings will be deleted in the registry!\r\nContinue?", "OffHook - Clear Settings", MB_YESNO | MB_ICONWARNING))
 				break;
 			m_config.DeleteKey();
+			GetSetAutoRunRegistry(false);
 			SendMessage(hDlg, WM_CLOSE, 0, 0);
 			break;
 
@@ -96,6 +97,9 @@ bool SettingsDialog::ReadSettings(HWND hDlg)
 	boolVal = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
 	SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_BALLOON, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
 
+	boolVal = GetSetAutoRunRegistry(std::nullopt);
+	SendDlgItemMessage(hDlg, IDC_AUTORUN, BM_SETCHECK, boolVal == true ? BST_CHECKED : BST_UNCHECKED, 0);
+
 	return true;
 }
 
@@ -128,5 +132,42 @@ bool SettingsDialog::SaveSettings(HWND hDlg)
 	res = SendDlgItemMessage(hDlg, IDC_AUTO_OFFHOOK_BALLOON, BM_GETCHECK, 0, 0);
 	ret &= m_config.SaveBool(SETTINGS_AUTO_OFFHOOK_BALLOON, res == BST_CHECKED ? true : false);
 
+	res = SendDlgItemMessage(hDlg, IDC_AUTORUN, BM_GETCHECK, 0, 0);
+	ret &= GetSetAutoRunRegistry(res == BST_CHECKED ? true : false);
+
 	return ret;
+}
+
+
+bool SettingsDialog::GetSetAutoRunRegistry(std::optional<bool> setValue)
+// pass std::nullopt for getting the current value,
+// else the value to set
+{
+	HKEY hKey;
+
+	LSTATUS err = RegCreateKeyEx(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+		0, NULL,
+		0, KEY_READ | KEY_SET_VALUE, NULL,
+		&hKey, NULL);
+	if(err != ERROR_SUCCESS)
+		return false;
+
+	if(setValue.has_value()) {
+		if(setValue.value()) { // set value
+			char path[MAX_PATH];
+			GetModuleFileName(NULL, path, sizeof(path));
+			std::string cmdLine = "\"";
+			cmdLine.append(path);
+			cmdLine.append("\" -minimized");
+			err = RegSetValueEx(hKey, SETTINGS_APPNAME, 0, REG_SZ, reinterpret_cast<const BYTE*>(cmdLine.c_str()), cmdLine.length() + 1);
+		} else { // delete value
+			err = RegDeleteValue(hKey, SETTINGS_APPNAME);
+		}
+	} else { // read current value
+		err = RegGetValue(hKey, NULL, SETTINGS_APPNAME, RRF_RT_REG_SZ, NULL, NULL, NULL);
+	}
+
+	RegCloseKey(hKey);
+
+	return (err == ERROR_SUCCESS);
 }
