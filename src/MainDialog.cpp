@@ -231,12 +231,13 @@ void MainDialog::readSettings()
 	Settings m_config;
 	m_config.Init(SETTINGS_VENDORNAME, SETTINGS_APPNAME);
 
-	m_settings.OnHookOnExit       = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
-	m_settings.TrayIcon           = m_config.ReadBool(SETTINGS_TRAY_ICON, true);
-	m_settings.MinimizeToTray     = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
-	m_settings.AutoOffHook        = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
-	m_settings.AutoOffHookProcess = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
-	m_settings.AutoOffHookBalloon = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
+	m_settings.OnHookOnExit         = m_config.ReadBool(SETTINGS_ONHOOK_ON_EXIT, true);
+	m_settings.TrayIcon             = m_config.ReadBool(SETTINGS_TRAY_ICON, true);
+	m_settings.MinimizeToTray       = m_config.ReadBool(SETTINGS_MINIMIZE_TO_TRAY, true);
+	m_settings.AutoOffHook          = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK, true);
+	m_settings.AutoOffHookProcess   = m_config.ReadString(SETTINGS_AUTO_OFFHOOK_PROCESS, SETTINGS_DEFAULT_AUTO_OFFHOOK_PROCESS);
+	m_settings.AutoOffHookBalloon   = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_BALLOON, true);
+	m_settings.AutoOffHookRestoreUi = m_config.ReadBool(SETTINGS_AUTO_OFFHOOK_RESTORE_UI, true);
 
 	m_config.Exit();
 }
