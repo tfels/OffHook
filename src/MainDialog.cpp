@@ -26,6 +26,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+		m_hWnd = hDlg;
 		{
 		HICON hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
 		SendMessageW(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
@@ -34,7 +35,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 		}
 		readSettings();
 		if(m_settings.TrayIcon)
-			addTrayIcon(hDlg);
+			addTrayIcon();
 
 		ret = SetTimer(hDlg, IDC_INIT, 100, nullptr);
 		return (INT_PTR)TRUE;
@@ -65,7 +66,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 			static LONG s_prevExState;
 			if(wParam == SIZE_MINIMIZED) {
 				if(!m_settings.TrayIcon) // tray icon not present --> add
-					addTrayIcon(hDlg);
+					addTrayIcon();
 				s_prevExState = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
 			} else if(wParam == SIZE_RESTORED) {
 				SetWindowLong(hDlg, GWL_EXSTYLE, s_prevExState);
@@ -109,7 +110,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 				readSettings();
 				// apply settings
 				if(m_settings.TrayIcon)
-					addTrayIcon(hDlg);
+					addTrayIcon();
 				else
 					removeTrayIcon();
 
@@ -162,11 +163,11 @@ void MainDialog::SetMuteIcon(bool state)
 //----------------------------------------------------------------------
 // tray icon handling
 //----------------------------------------------------------------------
-void MainDialog::addTrayIcon(HWND hWnd)
+void MainDialog::addTrayIcon()
 {
 	ZeroMemory(&m_niData, sizeof(m_niData));
 	m_niData.cbSize = sizeof(NOTIFYICONDATA);
-	m_niData.hWnd = hWnd;
+	m_niData.hWnd = m_hWnd;
 	m_niData.uID = ID_TRAY_ICON;
 	m_niData.uFlags = NIF_ICON | NIF_MESSAGE;
 	m_niData.hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_APP));
