@@ -60,7 +60,7 @@ INT_PTR CALLBACK SettingsDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 
 		case IDOK:
 			SaveSettings(hDlg);
-			// fallthrough
+			[[fallthrough]];
 		case IDCLOSE:
 		case IDCANCEL:
 			EndDialog(hDlg, wParam);

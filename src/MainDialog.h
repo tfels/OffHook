@@ -25,7 +25,7 @@ public: // implement ProcessWatcher_NotifyInterface
 	virtual void ProcessStopped(std::string name);
 
 private: // constructors
-	MainDialog() {};
+	MainDialog() : m_niData({ 0 }) {};
 	~MainDialog() {};
 
 private:

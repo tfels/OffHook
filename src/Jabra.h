@@ -30,7 +30,7 @@ private:
 
 private:
 	Jabra_DeviceInfo m_deviceInfo;
-	bool m_OffHookState = false;
+	bool m_OffHookState   = false;
 	bool m_BusyLightState = false;
-	bool m_MuteState = false;
+	bool m_MuteState      = false;
 };

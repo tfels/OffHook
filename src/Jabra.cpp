@@ -49,7 +49,7 @@ static void gLogDeviceEvent(unsigned short deviceID, char* eventStr)
 }
 
 // ----------------------------------------
-Jabra::Jabra()
+Jabra::Jabra() : m_deviceInfo({ 0 })
 {
 }
 

@@ -9,8 +9,8 @@ class ProcessWatcher_NotifyInterface;
 
 class WmiEventSink : public IWbemObjectSink
 {
-	LONG m_lRef;
-	bool bDone;
+	LONG m_lRef = 0;
+	bool bDone  = false;
 
 public:
 	WmiEventSink(ProcessWatcher_NotifyInterface* notifyCallback) :

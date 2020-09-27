@@ -12,10 +12,10 @@
 #define SETTINGS_AUTO_OFFHOOK_BALLOON  "AutoOffHookBalloonTip"   // default: true
 
 struct OffHookSettings {
-	bool OnHookOnExit;
-	bool TrayIcon;
-	bool MinimizeToTray;
-	bool AutoOffHook;
-	std::string AutoOffHookProcess;
-	bool AutoOffHookBalloon;
+	bool OnHookOnExit       = true;
+	bool TrayIcon           = true;
+	bool MinimizeToTray     = true;
+	bool AutoOffHook        = true;
+	std::string AutoOffHookProcess = "";
+	bool AutoOffHookBalloon = true;
 };
