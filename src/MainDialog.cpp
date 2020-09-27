@@ -64,6 +64,8 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 	case WM_SIZE:
 		if(m_settings.MinimizeToTray) {
 			if(wParam == SIZE_MINIMIZED) {
+				m_isMinimized = true;
+				m_autoRestoredFromMinimized = false;
 				if(!m_settings.TrayIcon) // tray icon not present --> add
 					addTrayIcon();
 				m_prevGwlExStyle = SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_NOACTIVATE);
@@ -71,6 +73,7 @@ INT_PTR CALLBACK MainDialog::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
 				SetWindowLong(hDlg, GWL_EXSTYLE, m_prevGwlExStyle);
 				if(!m_settings.TrayIcon)
 					removeTrayIcon();
+				m_isMinimized = false;
 			}
 		}
 		break;
@@ -212,6 +215,11 @@ void MainDialog::ProcessStarted(std::string name)
 {
 	if(m_settings.AutoOffHookBalloon)
 		showBallontip("Setting off hook mode due to process start");
+	if(m_settings.AutoOffHookRestoreUi && m_isMinimized) {
+		m_autoRestoredFromMinimized = true;
+		ShowWindow(m_hWnd, SW_RESTORE);
+	}
+
 	Jabra::instance()->OffHook(true);
 }
 
@@ -219,6 +227,9 @@ void MainDialog::ProcessStopped(std::string name)
 {
 	if(m_settings.AutoOffHookBalloon)
 		showBallontip("Resetting to on hook due to process stop");
+	if(m_settings.AutoOffHookRestoreUi && m_autoRestoredFromMinimized)
+		ShowWindow(m_hWnd, SW_MINIMIZE);
+
 	Jabra::instance()->OffHook(false);
 }
 

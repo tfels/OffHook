@@ -41,4 +41,6 @@ private:
 	struct OffHookSettings m_settings;
 	HWND m_hWnd;
 	LONG m_prevGwlExStyle;
+	bool m_isMinimized = false;
+	bool m_autoRestoredFromMinimized = false;
 };
