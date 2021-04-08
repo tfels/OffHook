@@ -17,6 +17,7 @@ public:
 	void SetOffHookIcon(bool state);
 	void SetBusyLightIcon(bool state);
 	void SetMuteIcon(bool state);
+	void SetBatteryLevel(uint8_t level, bool charging);
 
 	void Log(const char* aFormat, ...);
 

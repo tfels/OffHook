@@ -109,5 +109,29 @@
     <Image Include="..\src\rc\images\app.ico">
       <Filter>Resource Files\images</Filter>
     </Image>
+    <Image Include="..\src\rc\images\batt_0bar.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="..\src\rc\images\batt_1bar.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="..\src\rc\images\batt_2bar.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="..\src\rc\images\batt_3bar.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="..\src\rc\images\batt_4bar.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="..\src\rc\images\batt_5bar.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="..\src\rc\images\batt_charging.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
+    <Image Include="..\src\rc\images\batt_no.bmp">
+      <Filter>Resource Files\images</Filter>
+    </Image>
   </ItemGroup>
 </Project>

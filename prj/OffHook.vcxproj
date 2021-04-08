@@ -193,6 +193,14 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\src\rc\images\app.ico" />
+    <Image Include="..\src\rc\images\batt_0bar.bmp" />
+    <Image Include="..\src\rc\images\batt_1bar.bmp" />
+    <Image Include="..\src\rc\images\batt_2bar.bmp" />
+    <Image Include="..\src\rc\images\batt_3bar.bmp" />
+    <Image Include="..\src\rc\images\batt_4bar.bmp" />
+    <Image Include="..\src\rc\images\batt_5bar.bmp" />
+    <Image Include="..\src\rc\images\batt_charging.bmp" />
+    <Image Include="..\src\rc\images\batt_no.bmp" />
     <Image Include="..\src\rc\images\mic_off.bmp" />
     <Image Include="..\src\rc\images\mic_on.bmp" />
     <Image Include="..\src\rc\images\busy_off.bmp" />

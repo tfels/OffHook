@@ -47,6 +47,10 @@ static void gLogDeviceEvent(unsigned short deviceID, char* eventStr)
 {
 	Jabra::instance()->cbLogDeviceEvent(deviceID, eventStr);
 }
+static void gBatteryStatusUpdateCallbackV2(unsigned short deviceID, Jabra_BatteryStatus* batteryStatus)
+{
+	Jabra::instance()->cbBatteryStatusUpdateCallbackV2(deviceID, batteryStatus);
+}
 
 // ----------------------------------------
 Jabra::Jabra() : m_deviceInfo({ 0 })
@@ -106,7 +110,16 @@ void Jabra::cbLogDeviceEvent(unsigned short deviceID, char* eventStr)
 
 	json_value_free(js);
 }
-
+void Jabra::cbBatteryStatusUpdateCallbackV2(unsigned short deviceID, Jabra_BatteryStatus* batteryStatus)
+{
+	if (deviceID != deviceId()) {
+		Log("Got a battery update event for unknown device id (%d)\r\n", deviceID);
+		Jabra_FreeBatteryStatus(batteryStatus);
+		return;
+	}
+	MainDialog::instance()->SetBatteryLevel(batteryStatus->levelInPercent, batteryStatus->charging);
+	Jabra_FreeBatteryStatus(batteryStatus);
+}
 
 
 // ----------------------------------------
@@ -172,6 +185,18 @@ bool Jabra::InitDevice()
 	Log("Mute Supported=%d\r\n", ok);
 	MainDialog::instance()->SetMuteIcon(m_MuteState);
 
+	// register Battery level callback
+	Jabra_BatteryStatus* batteryStatus = { 0 };
+	ret = Jabra_GetBatteryStatusV2(deviceId(), &batteryStatus);
+	if (ret == Return_Ok) {
+		Log("Battery state: %d%% (%scharging)\r\n", batteryStatus->levelInPercent, batteryStatus->charging ? "" : "not ");
+		cbBatteryStatusUpdateCallbackV2(deviceId(), batteryStatus);
+		Jabra_RegisterBatteryStatusUpdateCallbackV2(gBatteryStatusUpdateCallbackV2);
+	}
+	else
+		Log("failed to get battery status! (ret=%d)\r\n", ret);
+
+	// enable logging at last, it'll take a few seconds
 	// Logging for mute state
 	ret = Jabra_EnableDevLog(deviceId(), true);
 	if(ret != Return_Ok) {
@@ -179,7 +204,7 @@ bool Jabra::InitDevice()
 		Log("--> mute state is not updated!\r\n");
 	}
 	ok = Jabra_IsDevLogEnabled(deviceId());
-	Log("Device Log Enabled=%d=%d\r\n", ok);
+	Log("Device Log Enabled=%d\r\n", ok);
 	Jabra_RegisterDevLogCallback(gLogDeviceEvent);
 
 	return true;

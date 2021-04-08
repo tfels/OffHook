@@ -162,6 +162,32 @@ void MainDialog::SetMuteIcon(bool state)
 	_setButtonImage(IDC_MUTE, state ? IDB_MIC_OFF : IDB_MIC_ON);
 }
 
+void MainDialog::SetBatteryLevel(uint8_t level, bool charging)
+{
+	int imageId = 0;
+	if (level < 15)						//  0 - 15
+		imageId = IDB_BATT_0_BAR;
+	else if (level < 40)				// 15 - 40
+		imageId = IDB_BATT_1_BAR;
+	else if (level < 60)				// 40 - 60
+		imageId = IDB_BATT_2_BAR;
+	else if (level < 80)				// 60 - 80
+		imageId = IDB_BATT_3_BAR;
+	else if (level < 95)				// 80 - 95
+		imageId = IDB_BATT_4_BAR;
+	else if (level <= 100)				// 95 - 100
+		imageId = IDB_BATT_5_BAR;
+	else
+		imageId = IDB_BATT_NO;
+	_setButtonImage(IDC_BATTERY_LEVEL, imageId);
+
+	char batPercentage[16] = { 0 };
+	sprintf_s(batPercentage, sizeof(batPercentage)-1, "%d%%", level);
+	if (charging)
+		strcat_s(batPercentage, sizeof(batPercentage)-1, " +");
+	SetWindowText(GetDlgItem(g_hMainDlg, IDC_BATTERY_LEVEL_TEXT), batPercentage);
+}
+
 //----------------------------------------------------------------------
 // tray icon handling
 //----------------------------------------------------------------------

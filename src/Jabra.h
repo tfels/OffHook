@@ -20,6 +20,7 @@ public: // internal callbacks
 	void cbFirstScanForDevicesDone();
 	void cbBusylightFunc(unsigned short deviceID, bool busylightValue);
 	void cbLogDeviceEvent(unsigned short deviceID, char* eventStr);
+	void cbBatteryStatusUpdateCallbackV2(unsigned short deviceID, Jabra_BatteryStatus* batteryStatus);
 
 private: // constructors
 	Jabra();

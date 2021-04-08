@@ -84,6 +84,8 @@ BEGIN
     EDITTEXT        IDC_LOG,7,86,295,60,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
     LTEXT           "Busy Light",IDC_STATIC,180,26,34,8
     PUSHBUTTON      "Settings",IDC_SETTINGS,252,69,50,14
+    PUSHBUTTON      "BatteryLevel",IDC_BATTERY_LEVEL,267,27,12,24,BS_BITMAP
+    CTEXT           "- %",IDC_BATTERY_LEVEL_TEXT,262,52,27,8
 END
 
 
@@ -146,6 +148,22 @@ IDB_ONHOOK              BITMAP                  "images\\OnHook.bmp"
 IDB_MIC_ON              BITMAP                  "images\\mic_on.bmp"
 
 IDB_MIC_OFF             BITMAP                  "images\\mic_off.bmp"
+
+IDB_BATT_0_BAR          BITMAP                  "images\\batt_0bar.bmp"
+
+IDB_BATT_1_BAR          BITMAP                  "images\\batt_1bar.bmp"
+
+IDB_BATT_2_BAR          BITMAP                  "images\\batt_2bar.bmp"
+
+IDB_BATT_3_BAR          BITMAP                  "images\\batt_3bar.bmp"
+
+IDB_BATT_4_BAR          BITMAP                  "images\\batt_4bar.bmp"
+
+IDB_BATT_5_BAR          BITMAP                  "images\\batt_5bar.bmp"
+
+IDB_BATT_CHARGING       BITMAP                  "images\\batt_charging.bmp"
+
+IDB_BATT_NO             BITMAP                  "images\\batt_no.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////
